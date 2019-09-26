@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ordermanagement.shared.product-authority-api", "ordermanagement.shared.product-authority-api\ordermanagement.shared.product-authority-api.csproj", "{0B6A2B8F-7A6B-4F11-86E3-3BB02FDF7B96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ordermanagement.shared.product-authority-api-data-access", "ordermanagement.shared.product-authority-api-data-access\ordermanagement.shared.product-authority-api-data-access.csproj", "{BFAB7219-0820-4D2B-81DB-521933EBDDBA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B6A2B8F-7A6B-4F11-86E3-3BB02FDF7B96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B6A2B8F-7A6B-4F11-86E3-3BB02FDF7B96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B6A2B8F-7A6B-4F11-86E3-3BB02FDF7B96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B6A2B8F-7A6B-4F11-86E3-3BB02FDF7B96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFAB7219-0820-4D2B-81DB-521933EBDDBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFAB7219-0820-4D2B-81DB-521933EBDDBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFAB7219-0820-4D2B-81DB-521933EBDDBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFAB7219-0820-4D2B-81DB-521933EBDDBA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8AAFE31-961E-4E45-B984-3EA78E7960A6}
+	EndGlobalSection
+EndGlobal
