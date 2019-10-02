@@ -67,7 +67,6 @@ namespace ordermanagement.shared.product_authority_api.Extensions
                 // only increment webapi version when backwards compatibilty cannot be maintained
                 #region Assign Controllers to API Version 1.0
                 o.Conventions.Controller<ProductsController>().HasApiVersion(new ApiVersion(1, 0));
-                o.Conventions.Controller<OfferingsController>().HasApiVersion(new ApiVersion(1, 0));
                 #endregion
             });
             return services;

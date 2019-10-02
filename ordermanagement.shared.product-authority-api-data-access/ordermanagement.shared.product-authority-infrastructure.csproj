@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RootNamespace>ordermanagement.shared.product_authority_api_data_access</RootNamespace>
+    <RootNamespace>ordermanagement.shared.product_authority_infrastructure</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

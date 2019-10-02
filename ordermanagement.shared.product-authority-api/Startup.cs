@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using ordermanagement.shared.product_authority_api.Application.Queries.Products;
 using ordermanagement.shared.product_authority_api.Extensions;
-using ordermanagement.shared.product_authority_api.ServiceAbstractions;
-using ordermanagement.shared.product_authority_api_data_access;
+using ordermanagement.shared.product_authority_infrastructure;
 using Serilog;
 
 namespace ordermanagement.shared.product_authority_api
@@ -55,7 +48,7 @@ namespace ordermanagement.shared.product_authority_api
                 .AddDbContext<ProductAuthorityDatabaseContext>()
                 .BuildServiceProvider();
 
-            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductQueries, ProductQueries>();
             #endregion
 
             services.AddWebApiVersioningConfiguration();

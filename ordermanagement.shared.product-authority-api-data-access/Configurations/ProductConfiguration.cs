@@ -1,11 +1,11 @@
 ﻿//using Microsoft.EntityFrameworkCore;
 //using Microsoft.EntityFrameworkCore.Metadata.Builders;
-//using ordermanagement.shared.product_authority_api_data_access.Entities;
+//using ordermanagement.shared.product_authority_infrastructure.Entities;
 //using System;
 //using System.Collections.Generic;
 //using System.Text;
 
-//namespace ordermanagement.shared.product_authority_api_data_access.Configurations
+//namespace ordermanagement.shared.product_authority_infrastructure.Configurations
 //{
 //    public class ProductConfiguration : IEntityTypeConfiguration<ProductEntity>
 //    {

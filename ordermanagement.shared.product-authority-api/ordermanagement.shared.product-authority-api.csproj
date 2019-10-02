@@ -38,7 +38,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ordermanagement.shared.product-authority-api-data-access\ordermanagement.shared.product-authority-api-data-access.csproj" />
+    <Folder Include="Application\Queries\Rates\" />
+    <Folder Include="Application\Queries\Offerings\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ordermanagement.shared.product-authority-api-data-access\ordermanagement.shared.product-authority-infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

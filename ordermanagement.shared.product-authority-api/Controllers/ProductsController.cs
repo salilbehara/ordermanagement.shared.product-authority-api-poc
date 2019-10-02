@@ -1,12 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ordermanagement.shared.product_authority_api.Models;
-using ordermanagement.shared.product_authority_api.Models.Requests;
-using ordermanagement.shared.product_authority_api.Models.Response;
-using ordermanagement.shared.product_authority_api.ServiceAbstractions;
+using ordermanagement.shared.product_authority_api.Application.Queries.Products;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ordermanagement.shared.product_authority_api.Controllers
@@ -16,12 +15,12 @@ namespace ordermanagement.shared.product_authority_api.Controllers
     [Produces("application/json")]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductQueries _productQueries;
         private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(IProductRepository productRepository, ILogger<ProductsController> logger)
+        public ProductsController(IProductQueries productQueries, ILogger<ProductsController> logger)
         {
-            _productRepository = productRepository;
+            _productQueries = productQueries;
             _logger = logger;
         }
 
@@ -30,29 +29,28 @@ namespace ordermanagement.shared.product_authority_api.Controllers
         /// </summary>
         [HttpGet]
         [SwaggerOperation(OperationId = "Product_GetProduct")]
-        [ProducesResponseType(typeof(GetProductResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        public IActionResult GetProduct([FromQuery]GetProductRequest request)
+        public async Task<IActionResult> GetProductAsync([FromQuery][Required]string ProductKey, DateTime? OrderStartDate)
         {
             try
             {
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
 
-                if ((request.ProductId ?? 0) == 0 && 
-                     string.IsNullOrEmpty(request.ProductKey))
+                if (string.IsNullOrEmpty(ProductKey))
                 {
                     return BadRequest();
                 }
 
-                var titleCatalogResponse = _productRepository.GetProduct(request);
+                var response = await _productQueries.GetProductAsync(ProductKey, OrderStartDate ?? DateTime.UtcNow);
 
                 stopWatch.Stop();
                 TimeSpan ts = stopWatch.Elapsed;
-                titleCatalogResponse.ElapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, stopWatch.ElapsedMilliseconds);                
+                var elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, stopWatch.ElapsedMilliseconds);                
 
-                return Ok(titleCatalogResponse);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -69,33 +67,33 @@ namespace ordermanagement.shared.product_authority_api.Controllers
             }
         }
 
-        /// <summary>
-        /// Add a Product
-        /// </summary>
-        [HttpPost]
-        [SwaggerOperation(OperationId = "Product_AddProduct")]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        public IActionResult AddProducts([FromBody]AddProductRequest request)
-        {
-            try
-            {
-                _productRepository.AddProduct(request);
+        ///// <summary>
+        ///// Add a Product
+        ///// </summary>
+        //[HttpPost]
+        //[SwaggerOperation(OperationId = "Product_AddProduct")]
+        //[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        //public IActionResult AddProducts([FromBody]AddProductRequest request)
+        //{
+        //    try
+        //    {
+        //        _productRepository.AddProduct(request);
 
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Something went wrong in GetProductDetails");
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Something went wrong in GetProductDetails");
 
-                var errorResponse = new ProblemDetails()
-                {
-                    Title = "An unexpected error occurred. Please try again later.",
-                    Status = StatusCodes.Status500InternalServerError,
-                    Detail = ex.Message
-                };
+        //        var errorResponse = new ProblemDetails()
+        //        {
+        //            Title = "An unexpected error occurred. Please try again later.",
+        //            Status = StatusCodes.Status500InternalServerError,
+        //            Detail = ex.Message
+        //        };
 
-                return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
-            }
-        }
+        //        return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
+        //    }
+        //}
     }
 }

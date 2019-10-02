@@ -4,19 +4,9 @@
         <name>ordermanagement.shared.product-authority-api</name>
     </assembly>
     <members>
-        <member name="M:ordermanagement.shared.product_authority_api.Controllers.OfferingsController.GetProducts(ordermanagement.shared.product_authority_api.Models.Requests.GetProductRequest)">
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.ProductsController.GetProductAsync(System.String,System.Nullable{System.DateTime})">
             <summary>
             Get Product details for the supplied product id and date range.
-            </summary>
-        </member>
-        <member name="M:ordermanagement.shared.product_authority_api.Controllers.ProductsController.GetProduct(ordermanagement.shared.product_authority_api.Models.Requests.GetProductRequest)">
-            <summary>
-            Get Product details for the supplied product id and date range.
-            </summary>
-        </member>
-        <member name="M:ordermanagement.shared.product_authority_api.Controllers.ProductsController.AddProducts(ordermanagement.shared.product_authority_api.Models.Requests.AddProductRequest)">
-            <summary>
-            Add a Product
             </summary>
         </member>
         <member name="M:ordermanagement.shared.product_authority_api.SwaggerDefaultValues.Apply(Swashbuckle.AspNetCore.Swagger.Operation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">

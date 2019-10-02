@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ordermanagement.shared.product_authority_api_data_access.Entities
+namespace ordermanagement.shared.product_authority_infrastructure.Entities
 {
     public partial class DeliveryMethodEntity
     {

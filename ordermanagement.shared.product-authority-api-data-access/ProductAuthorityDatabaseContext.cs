@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ordermanagement.shared.product_authority_api_data_access.Entities;
+using ordermanagement.shared.product_authority_infrastructure.Entities;
 
-namespace ordermanagement.shared.product_authority_api_data_access
+namespace ordermanagement.shared.product_authority_infrastructure
 {
     public partial class ProductAuthorityDatabaseContext : DbContext
     {
@@ -27,7 +27,7 @@ namespace ordermanagement.shared.product_authority_api_data_access
             // You did not see this. Just imagine it is masked.
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("Host=product-authority.cluster-c4w82moezzdt.us-east-1.rds.amazonaws.com;Database=product_authority_3;Username=xxxxxxx;Password=xxxxxxxx");
+                optionsBuilder.UseNpgsql("Host=product-authority.cluster-c4w82moezzdt.us-east-1.rds.amazonaws.com;Database=product_authority_3;Username=test;Password=test1234");
             }
         }
 
