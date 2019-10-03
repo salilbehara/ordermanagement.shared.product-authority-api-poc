@@ -15,6 +15,18 @@ namespace ordermanagement.shared.product_authority_api.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        public static void AddCommandQueryHandlers(this IServiceCollection services, Type handlerInterface)
+        {
+            var handlers = typeof(Startup).Assembly.GetTypes()
+                .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerInterface)
+            );
+
+            foreach (var handler in handlers)
+            {
+                services.AddScoped(handler.GetInterfaces().First(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerInterface), handler);
+            }
+        }
+
         public static IServiceCollection AddHealthCheckConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services

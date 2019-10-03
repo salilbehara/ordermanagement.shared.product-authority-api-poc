@@ -1,10 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ordermanagement.shared.product_authority_api.Application.Commands.Products;
+using ordermanagement.shared.product_authority_api.Application.Common;
 using ordermanagement.shared.product_authority_api.Application.Queries.Products;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -15,46 +16,65 @@ namespace ordermanagement.shared.product_authority_api.Controllers
     [Produces("application/json")]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductQueries _productQueries;
+        private readonly IQueryProcessor _queries;
+        private readonly ICommandProcessor _commands;
         private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(IProductQueries productQueries, ILogger<ProductsController> logger)
+        public ProductsController(IQueryProcessor queries, ICommandProcessor commands, ILogger<ProductsController> logger)
         {
-            _productQueries = productQueries;
+            _queries = queries;
+            _commands = commands;
             _logger = logger;
         }
 
+
         /// <summary>
-        /// Get Product details for the supplied product id and date range.
+        /// Get Product details for the supplied product id and effective start date.
         /// </summary>
         [HttpGet]
-        [SwaggerOperation(OperationId = "Product_GetProduct")]
-        [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetProductAsync([FromQuery][Required]string ProductKey, DateTime? OrderStartDate)
+        [SwaggerOperation(OperationId = "Product_GetProductBasedOnEffectiveStartDateAsync")]
+        [ProducesResponseType(typeof(GetProductBasedOnEffectiveStartDateQueryDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetProductBasedOnEffectiveStartDateAsync([FromQuery][Required]string productKey, DateTime? effectiveStartDate) => 
+            Ok(await _queries.Process(new GetProductBasedOnEffectiveStartDateQuery(productKey, effectiveStartDate ?? DateTime.UtcNow)));
+
+
+        /// <summary>
+        /// Get all available Product statuses
+        /// </summary>
+        [HttpGet]
+        [Route("status")]
+        [SwaggerOperation(OperationId = "Product_GetAllProductStatusesAsync")]
+        [ProducesResponseType(typeof(GetAllProductStatusesQueryDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllProductStatusesAsync() => Ok(await _queries.Process(new GetAllProductStatusesQuery()));
+
+
+        /// <summary>
+        /// Get all available Product types
+        /// </summary>
+        [HttpGet]
+        [Route("types")]
+        [SwaggerOperation(OperationId = "Product_GetAllProductTypesAsync")]
+        [ProducesResponseType(typeof(GetAllProductTypesQueryDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllProductTypesAsync() => Ok(await _queries.Process(new GetAllProductTypesQuery()));
+
+
+        /// <summary>
+        /// Add a Product
+        /// </summary>
+        [HttpPost]
+        [SwaggerOperation(OperationId = "Product_AddProductAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AddProductAsync([FromBody]AddProductCommand addProductCommand)
         {
             try
             {
-                Stopwatch stopWatch = new Stopwatch();
-                stopWatch.Start();
-
-                if (string.IsNullOrEmpty(ProductKey))
-                {
-                    return BadRequest();
-                }
-
-                var response = await _productQueries.GetProductAsync(ProductKey, OrderStartDate ?? DateTime.UtcNow);
-
-                stopWatch.Stop();
-                TimeSpan ts = stopWatch.Elapsed;
-                var elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, stopWatch.ElapsedMilliseconds);                
-
-                return Ok(response);
+                await _commands.Process(addProductCommand);
+                return Ok();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Something went wrong in GetProduct");
+                _logger.LogError(ex, "Something went wrong in AddProductAsync");
 
                 var errorResponse = new ProblemDetails()
                 {
@@ -67,33 +87,34 @@ namespace ordermanagement.shared.product_authority_api.Controllers
             }
         }
 
-        ///// <summary>
-        ///// Add a Product
-        ///// </summary>
-        //[HttpPost]
-        //[SwaggerOperation(OperationId = "Product_AddProduct")]
-        //[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        //public IActionResult AddProducts([FromBody]AddProductRequest request)
-        //{
-        //    try
-        //    {
-        //        _productRepository.AddProduct(request);
 
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Something went wrong in GetProductDetails");
+        /// <summary>
+        /// Update a Product
+        /// </summary>
+        [HttpPut]
+        [SwaggerOperation(OperationId = "Product_UpdateProductAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateProductAsync([FromBody]UpdateProductCommand updateProductCommand)
+        {
+            try
+            {
+                await _commands.Process(updateProductCommand);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Something went wrong in AddProductAsync");
 
-        //        var errorResponse = new ProblemDetails()
-        //        {
-        //            Title = "An unexpected error occurred. Please try again later.",
-        //            Status = StatusCodes.Status500InternalServerError,
-        //            Detail = ex.Message
-        //        };
+                var errorResponse = new ProblemDetails()
+                {
+                    Title = "An unexpected error occurred. Please try again later.",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Detail = ex.Message
+                };
 
-        //        return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
-        //    }
-        //}
+                return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
+            }
+        }
     }
 }

@@ -4,10 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ordermanagement.shared.product_authority_api.Application.Commands.Products;
+using ordermanagement.shared.product_authority_api.Application.Common;
+using ordermanagement.shared.product_authority_api.Application.Queries.Offerings;
 using ordermanagement.shared.product_authority_api.Application.Queries.Products;
 using ordermanagement.shared.product_authority_api.Extensions;
 using ordermanagement.shared.product_authority_infrastructure;
 using Serilog;
+using System;
+using System.Linq;
 
 namespace ordermanagement.shared.product_authority_api
 {
@@ -48,7 +53,10 @@ namespace ordermanagement.shared.product_authority_api
                 .AddDbContext<ProductAuthorityDatabaseContext>()
                 .BuildServiceProvider();
 
-            services.AddScoped<IProductQueries, ProductQueries>();
+            services.AddCommandQueryHandlers(typeof(ICommandHandler<>));
+            services.AddCommandQueryHandlers(typeof(IQueryHandler<,>));
+            services.AddScoped<IQueryProcessor, QueryProcessor>();
+            services.AddScoped<ICommandProcessor, CommandProcessor>();
             #endregion
 
             services.AddWebApiVersioningConfiguration();
