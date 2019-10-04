@@ -42,7 +42,7 @@ namespace ordermanagement.shared.product_authority_api.Controllers
         /// Get all available Product statuses
         /// </summary>
         [HttpGet]
-        [Route("status")]
+        [Route("Status")]
         [SwaggerOperation(OperationId = "Product_GetAllProductStatusesAsync")]
         [ProducesResponseType(typeof(GetAllProductStatusesQueryDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllProductStatusesAsync() => Ok(await _queries.Process(new GetAllProductStatusesQuery()));
@@ -52,7 +52,7 @@ namespace ordermanagement.shared.product_authority_api.Controllers
         /// Get all available Product types
         /// </summary>
         [HttpGet]
-        [Route("types")]
+        [Route("Types")]
         [SwaggerOperation(OperationId = "Product_GetAllProductTypesAsync")]
         [ProducesResponseType(typeof(GetAllProductTypesQueryDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllProductTypesAsync() => Ok(await _queries.Process(new GetAllProductTypesQuery()));
