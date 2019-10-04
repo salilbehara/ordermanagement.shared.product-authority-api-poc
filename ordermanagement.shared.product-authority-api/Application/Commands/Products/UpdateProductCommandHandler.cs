@@ -4,6 +4,7 @@ using ordermanagement.shared.product_authority_api.Application.Extensions;
 using ordermanagement.shared.product_authority_infrastructure;
 using ordermanagement.shared.product_authority_infrastructure.Entities;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace ordermanagement.shared.product_authority_api.Application.Commands.Products
@@ -41,8 +42,7 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
             }
             else
             {
-                //Throw validation error
-                return;
+                throw new ValidationException($"No product found for Product Key '{command.ProductKey}' and Product Effective date of '{command.EffectiveStartDate}'");
             }
 
             var request = new ProductEntity

@@ -6,28 +6,51 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
 {
     public class UpdateProductCommand : ICommand
     {
-        [Required]
-        public string ProductKey { get; set; }
+        [Required, MaxLength(16)]
+        public string ProductKey { get; }
 
         [Required]
-        public DateTime EffectiveStartDate { get; set; }
+        public DateTime EffectiveStartDate { get; }
 
-        [Required]
-        public string ProductName { get; set; }
+        [Required, MaxLength(128)]
+        public string ProductName { get; }
 
-        public string ProductDisplayName { get; set; }
+        [MaxLength(128)]
+        public string ProductDisplayName { get; }
 
-        public string PrintIssn { get; set; }
+        [MaxLength(8)]
+        public string PrintIssn { get; }
 
-        public string OnlineIssn { get; set; }
+        [MaxLength(8)]
+        public string OnlineIssn { get; }
 
-        public string ProductTypeCode { get; set; }
+        [MaxLength(4)]
+        public string ProductTypeCode { get; }
 
-        [Required]
-        public string ProductStatusCode { get; set; }
+        [Required, MaxLength(4)]
+        public string ProductStatusCode { get; }
 
-        public string PublisherProductCode { get; set; }
+        [MaxLength(32)]
+        public string PublisherProductCode { get; }
 
-        public int LegacyIdSpid { get; set; }
+        public int LegacyIdSpid { get; }
+
+        public UpdateProductCommand(string productKey, DateTime effectiveStartDate, string productName, string productDisplayName, string printIssn, string onlineIssn,
+            string productTypeCode, string productStatusCode, string publisherProductCode, int legacyIdSpid)
+        {
+            //Add Precondition checks here if required. 
+            //This along with property attributes will help avoid transmitting invalid commands to command handlers and enforce the fail fast principle.
+
+            ProductKey = productKey;
+            EffectiveStartDate = effectiveStartDate;
+            ProductName = productName;
+            ProductDisplayName = productDisplayName;
+            PrintIssn = printIssn;
+            OnlineIssn = onlineIssn;
+            ProductTypeCode = productTypeCode;
+            ProductStatusCode = productStatusCode;
+            PublisherProductCode = publisherProductCode;
+            LegacyIdSpid = legacyIdSpid;
+        }
     }
 }

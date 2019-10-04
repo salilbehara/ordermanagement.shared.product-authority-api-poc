@@ -65,11 +65,15 @@ namespace ordermanagement.shared.product_authority_api.Controllers
         [SwaggerOperation(OperationId = "Product_AddProductAsync")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddProductAsync([FromBody]AddProductCommand addProductCommand)
+        public async Task<IActionResult> AddProductAsync([FromBody]AddProductDto request)
         {
             try
             {
+                var addProductCommand = new AddProductCommand(request.ProductName, request.ProductDisplayName, request.PublisherId, request.PrintIssn,
+                    request.OnlineIssn, request.ProductTypeCode, request.ProductStatusCode, request.PublisherProductCode, request.LegacyIdSpid);
+
                 await _commands.Process(addProductCommand);
+
                 return Ok();
             }
             catch (Exception ex)
@@ -95,11 +99,15 @@ namespace ordermanagement.shared.product_authority_api.Controllers
         [SwaggerOperation(OperationId = "Product_UpdateProductAsync")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateProductAsync([FromBody]UpdateProductCommand updateProductCommand)
+        public async Task<IActionResult> UpdateProductAsync([FromBody]UpdateProductDto request)
         {
             try
             {
+                var updateProductCommand = new UpdateProductCommand(request.ProductKey, request.EffectiveStartDate, request.ProductName, request.ProductDisplayName, request.PrintIssn, request.OnlineIssn,
+                    request.ProductTypeCode, request.ProductStatusCode, request.PublisherProductCode, request.LegacyIdSpid);
+
                 await _commands.Process(updateProductCommand);
+
                 return Ok();
             }
             catch (Exception ex)
