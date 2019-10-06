@@ -51,7 +51,7 @@ namespace ordermanagement.shared.product_authority_infrastructure
             // You did not see this. Just imagine it is masked.
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("Host=product-authority.cluster-c4w82moezzdt.us-east-1.rds.amazonaws.com;Database=product_authority_3;Username=test;Password=test1234");
+                optionsBuilder.UseNpgsql("Host=product-authority.cluster-c4w82moezzdt.us-east-1.rds.amazonaws.com;Database=product_authority_3;Username=XXXX;Password=XXXXX");
             }
         }
 
