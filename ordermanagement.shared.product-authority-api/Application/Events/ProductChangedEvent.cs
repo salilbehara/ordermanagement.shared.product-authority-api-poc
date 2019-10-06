@@ -9,17 +9,15 @@ namespace ordermanagement.shared.product_authority_api.Application.Events
         public string ProductDisplayName { get; private set; }
         public string PrintIssn { get; private set; }
         public string OnlineIssn { get; private set; }
-        public long PublisherId { get; private set; }
         public string PublisherProductCode { get; private set; }
 
         public ProductChangedEvent(string productName, string productDisplayName, string printIssn, string onlineIssn, 
-            long publisherId, string publisherProductCode, string eventName)
+            string publisherProductCode, string eventName)
         {
             ProductName = productName;
             ProductDisplayName = productDisplayName;
             PrintIssn = printIssn;
             OnlineIssn = onlineIssn;
-            PublisherId = publisherId;
             PublisherProductCode = publisherProductCode;
             EventName = eventName;
             EventId = Guid.NewGuid();

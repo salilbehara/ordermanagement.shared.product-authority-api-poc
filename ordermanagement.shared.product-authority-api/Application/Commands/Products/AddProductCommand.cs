@@ -48,10 +48,10 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
             PublisherProductCode = publisherProductCode;
             LegacyIdSpid = legacyIdSpid;
 
-            var productChangePublishToSnsTopicEvent = new ProductChangedEvent(productName, productDisplayName, printIssn, onlineIssn, 
-                publisherId, publisherProductCode, "Product Added - Publish to SNS Topic");
+            var productChangedPublishToSnsTopicEvent = new ProductChangedEvent(productName, productDisplayName, printIssn, onlineIssn, 
+                publisherProductCode, "product-added");
 
-            AddCommandEvent(productChangePublishToSnsTopicEvent);
+            AddCommandEvent(productChangedPublishToSnsTopicEvent);
         }
     }
 }
