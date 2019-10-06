@@ -1,10 +1,10 @@
-﻿using ordermanagement.shared.product_authority_api.Application.Common;
+﻿using MediatR;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ordermanagement.shared.product_authority_api.Application.Commands.Products
 {
-    public class UpdateProductCommand : ICommand
+    public class UpdateProductCommand : IRequest
     {
         [Required, MaxLength(16)]
         public string ProductKey { get; }

@@ -1,13 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ordermanagement.shared.product_authority_api.Application.Common;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using ordermanagement.shared.product_authority_api.Application.Extensions;
 using ordermanagement.shared.product_authority_infrastructure;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ordermanagement.shared.product_authority_api.Application.Queries.Products
 {
-    public class GetProductBasedOnEffectiveStartDateQueryHandler : IQueryHandler<GetProductBasedOnEffectiveStartDateQuery, GetProductBasedOnEffectiveStartDateQueryDto>
+    public class GetProductBasedOnEffectiveStartDateQueryHandler : IRequestHandler<GetProductBasedOnEffectiveStartDateQuery, GetProductBasedOnEffectiveStartDateQueryDto>
     {
         private readonly ProductAuthorityDatabaseContext _context;
 
@@ -16,15 +17,15 @@ namespace ordermanagement.shared.product_authority_api.Application.Queries.Produ
             _context = context;
         }
 
-        public async Task<GetProductBasedOnEffectiveStartDateQueryDto> Execute(GetProductBasedOnEffectiveStartDateQuery query)
+        public async Task<GetProductBasedOnEffectiveStartDateQueryDto> Handle(GetProductBasedOnEffectiveStartDateQuery request, CancellationToken cancellationToken)
         {
-            var productId = query.ProductKey.DecodeKeyToId();
+            var productId = request.ProductKey.DecodeKeyToId();
 
             var product = await _context.Products
                 .AsNoTracking()
                 .Where(p => p.ProductId == productId &&
-                            p.EffectiveStartDate <= query.EffectiveStartDate &&
-                            p.EffectiveEndDate > query.EffectiveStartDate)
+                            p.EffectiveStartDate <= request.EffectiveStartDate &&
+                            p.EffectiveEndDate > request.EffectiveStartDate)
                 .Include(p => p.ProductStatus)
                 .Include(p => p.ProductType)
                 .Select(p => new GetProductBasedOnEffectiveStartDateQueryDto

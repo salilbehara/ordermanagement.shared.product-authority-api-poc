@@ -1,9 +1,9 @@
-﻿using ordermanagement.shared.product_authority_api.Application.Common;
+﻿using MediatR;
 using System.ComponentModel.DataAnnotations;
 
 namespace ordermanagement.shared.product_authority_api.Application.Commands.Products
 {
-    public class AddProductCommand : ICommand
+    public class AddProductCommand : IRequest
     {
         [Required, MaxLength(128)]
         public string ProductName { get; }

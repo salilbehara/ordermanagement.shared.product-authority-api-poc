@@ -1,11 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ordermanagement.shared.product_authority_api.Application.Commands.Products;
-using ordermanagement.shared.product_authority_api.Application.Common;
 using ordermanagement.shared.product_authority_api.Application.Queries.Products;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -16,14 +16,12 @@ namespace ordermanagement.shared.product_authority_api.Controllers
     [Produces("application/json")]
     public class ProductsController : ControllerBase
     {
-        private readonly IQueryProcessor _queries;
-        private readonly ICommandProcessor _commands;
+        private readonly IMediator _mediator;
         private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(IQueryProcessor queries, ICommandProcessor commands, ILogger<ProductsController> logger)
+        public ProductsController(IMediator mediator, ILogger<ProductsController> logger)
         {
-            _queries = queries;
-            _commands = commands;
+            _mediator = mediator;
             _logger = logger;
         }
 
@@ -35,7 +33,7 @@ namespace ordermanagement.shared.product_authority_api.Controllers
         [SwaggerOperation(OperationId = "Product_GetProductBasedOnEffectiveStartDateAsync")]
         [ProducesResponseType(typeof(GetProductBasedOnEffectiveStartDateQueryDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProductBasedOnEffectiveStartDateAsync([FromQuery][Required]string productKey, DateTime? effectiveStartDate) => 
-            Ok(await _queries.Process(new GetProductBasedOnEffectiveStartDateQuery(productKey, effectiveStartDate ?? DateTime.UtcNow)));
+            Ok(await _mediator.Send(new GetProductBasedOnEffectiveStartDateQuery(productKey, effectiveStartDate ?? DateTime.UtcNow)));
 
 
         /// <summary>
@@ -45,7 +43,7 @@ namespace ordermanagement.shared.product_authority_api.Controllers
         [Route("Status")]
         [SwaggerOperation(OperationId = "Product_GetAllProductStatusesAsync")]
         [ProducesResponseType(typeof(GetAllProductStatusesQueryDto), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllProductStatusesAsync() => Ok(await _queries.Process(new GetAllProductStatusesQuery()));
+        public async Task<IActionResult> GetAllProductStatusesAsync() => Ok(await _mediator.Send(new GetAllProductStatusesQuery()));
 
 
         /// <summary>
@@ -55,7 +53,7 @@ namespace ordermanagement.shared.product_authority_api.Controllers
         [Route("Types")]
         [SwaggerOperation(OperationId = "Product_GetAllProductTypesAsync")]
         [ProducesResponseType(typeof(GetAllProductTypesQueryDto), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllProductTypesAsync() => Ok(await _queries.Process(new GetAllProductTypesQuery()));
+        public async Task<IActionResult> GetAllProductTypesAsync() => Ok(await _mediator.Send(new GetAllProductTypesQuery()));
 
 
         /// <summary>
@@ -72,7 +70,7 @@ namespace ordermanagement.shared.product_authority_api.Controllers
                 var addProductCommand = new AddProductCommand(request.ProductName, request.ProductDisplayName, request.PublisherId, request.PrintIssn,
                     request.OnlineIssn, request.ProductTypeCode, request.ProductStatusCode, request.PublisherProductCode, request.LegacyIdSpid);
 
-                await _commands.Process(addProductCommand);
+                await _mediator.Send(addProductCommand);
 
                 return Ok();
             }
@@ -106,7 +104,7 @@ namespace ordermanagement.shared.product_authority_api.Controllers
                 var updateProductCommand = new UpdateProductCommand(request.ProductKey, request.EffectiveStartDate, request.ProductName, request.ProductDisplayName, request.PrintIssn, request.OnlineIssn,
                     request.ProductTypeCode, request.ProductStatusCode, request.PublisherProductCode, request.LegacyIdSpid);
 
-                await _commands.Process(updateProductCommand);
+                await _mediator.Send(updateProductCommand);
 
                 return Ok();
             }
