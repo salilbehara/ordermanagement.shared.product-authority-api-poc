@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ordermanagement.shared.product_authority_api.Application.Queries.Models;
+using System.Collections.Generic;
 
 namespace ordermanagement.shared.product_authority_api.Application.Queries.Products
 {
@@ -7,12 +8,6 @@ namespace ordermanagement.shared.product_authority_api.Application.Queries.Produ
 
     public class GetAllProductTypesQueryDto
     {
-        public IEnumerable<ProductType> ProductTypes { get; set; }
-    }
-
-    public class ProductType
-    {
-        public string ProductTypeCode { get; set; }
-        public string ProductTypeName { get; set; }
+        public IEnumerable<ProductTypeDto> ProductTypes { get; set; }
     }
 }
