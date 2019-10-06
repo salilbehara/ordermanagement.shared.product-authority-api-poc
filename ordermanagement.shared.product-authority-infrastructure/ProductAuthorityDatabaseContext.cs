@@ -1,13 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using ordermanagement.shared.product_authority_infrastructure.Entities;
 
 namespace ordermanagement.shared.product_authority_infrastructure
 {
-    public partial class ProductAuthorityDatabaseContext : DbContext
+    public partial class ProductAuthorityDatabaseContext : DbContext, IUnitOfWork
     {
-        public ProductAuthorityDatabaseContext(DbContextOptions<ProductAuthorityDatabaseContext> options)
+        private readonly IMediator _mediator;
+
+        public ProductAuthorityDatabaseContext(DbContextOptions<ProductAuthorityDatabaseContext> options, IMediator mediator)
             : base(options)
         {
+            _mediator = mediator;
         }
         public virtual DbSet<DeliveryMethodEntity> DeliveryMethods { get; set; }
         public virtual DbSet<OfferingFormatEntity> OfferingFormats { get; set; }
@@ -22,12 +29,29 @@ namespace ordermanagement.shared.product_authority_infrastructure
         public virtual DbSet<RateTypeEntity> RateTypes { get; set; }
         public virtual DbSet<RateEntity> Rates { get; set; }
 
+        public async Task<bool> SaveChangesAndPublishEventsAsync(IReadOnlyCollection<INotification> domainEvents, CancellationToken cancellationToken = default)
+        {
+            // Dispatch Domain Events collection. 
+            // Choices:
+            // A) Right BEFORE committing data (EF SaveChanges) into the DB will make a single transaction including  
+            // side effects from the domain event handlers which are using the same DbContext with "InstancePerLifetimeScope" or "scoped" lifetime
+            // B) Right AFTER committing data (EF SaveChanges) into the DB will make multiple transactions. 
+            // You will need to handle eventual consistency and compensatory actions in case of failures in any of the Handlers. 
+            await _mediator.DispatchDomainEventsAsync(this, domainEvents);
+
+            // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
+            // performed through the DbContext will be committed
+            await base.SaveChangesAsync(cancellationToken);
+
+            return true;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // You did not see this. Just imagine it is masked.
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("Host=product-authority.cluster-c4w82moezzdt.us-east-1.rds.amazonaws.com;Database=product_authority_3;Username=XXXX;Password=XXXXX");
+                optionsBuilder.UseNpgsql("Host=product-authority.cluster-c4w82moezzdt.us-east-1.rds.amazonaws.com;Database=product_authority_3;Username=test;Password=test1234");
             }
         }
 

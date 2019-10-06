@@ -1,9 +1,10 @@
 ﻿using MediatR;
+using ordermanagement.shared.product_authority_api.Application.Events;
 using System.ComponentModel.DataAnnotations;
 
 namespace ordermanagement.shared.product_authority_api.Application.Commands.Products
 {
-    public class AddProductCommand : IRequest
+    public class AddProductCommand : CommandEvent, IRequest
     {
         [Required, MaxLength(128)]
         public string ProductName { get; }
@@ -46,6 +47,11 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
             ProductStatusCode = productStatusCode;
             PublisherProductCode = publisherProductCode;
             LegacyIdSpid = legacyIdSpid;
+
+            var productChangePublishToSnsTopicEvent = new ProductChangedEvent(productName, productDisplayName, printIssn, onlineIssn, 
+                publisherId, publisherProductCode, "Product Added - Publish to SNS Topic");
+
+            AddCommandEvent(productChangePublishToSnsTopicEvent);
         }
     }
 }

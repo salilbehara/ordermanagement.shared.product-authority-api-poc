@@ -32,7 +32,7 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
             };
 
             await _context.Products.AddAsync(product);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAndPublishEventsAsync(request.CommandEvents);
         }
     }
 }
