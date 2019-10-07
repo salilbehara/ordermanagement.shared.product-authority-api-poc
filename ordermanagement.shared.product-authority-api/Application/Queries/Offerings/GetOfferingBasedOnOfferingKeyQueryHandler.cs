@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ordermanagement.shared.product_authority_api.Application.Extensions;
-using ordermanagement.shared.product_authority_api.Application.Queries.Models;
+using ordermanagement.shared.product_authority_api.Application.Models;
 using ordermanagement.shared.product_authority_infrastructure;
 using System.Linq;
 using System.Threading;
@@ -22,15 +22,14 @@ namespace ordermanagement.shared.product_authority_api.Application.Queries.Offer
         {
             var offeringId = request.OfferingKey.DecodeKeyToId();
 
-            var offering = await _context.Offerings
+            var offerings = await _context.Offerings
                 .AsNoTracking()
                 .Where(o => o.OfferingId == offeringId &&
-                            o.EffectiveStartDate <= request.OrderStartDate &&
                             o.EffectiveEndDate > request.OrderStartDate)
                 .Include(o => o.OfferingStatus)
                 .Include(o => o.OfferingFormat)
                 .Include(o => o.OfferingPlatform)
-                .Select(o => new GetOfferingBasedOnOfferingKeyQueryDto
+                .Select(o => new OfferingDto
                 {
                     OfferingKey = o.OfferingKey,
                     OfferingEdition = o.OfferingEdition,
@@ -50,9 +49,9 @@ namespace ordermanagement.shared.product_authority_api.Application.Queries.Offer
                         OfferingPlatformName = o.OfferingPlatform.OfferingPlatformName
                     }
                 })
-                .FirstOrDefaultAsync();
+                .ToListAsync();
 
-            return offering;
+            return new GetOfferingBasedOnOfferingKeyQueryDto { Offerings = offerings };
         }
     }
 }

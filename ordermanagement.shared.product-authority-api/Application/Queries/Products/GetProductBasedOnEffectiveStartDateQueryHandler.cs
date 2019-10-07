@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ordermanagement.shared.product_authority_api.Application.Extensions;
-using ordermanagement.shared.product_authority_api.Application.Queries.Models;
+using ordermanagement.shared.product_authority_api.Application.Models;
 using ordermanagement.shared.product_authority_infrastructure;
 using System.Linq;
 using System.Threading;

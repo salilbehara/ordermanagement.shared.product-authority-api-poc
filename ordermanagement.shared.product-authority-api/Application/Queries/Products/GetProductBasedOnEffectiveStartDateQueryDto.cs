@@ -1,4 +1,4 @@
-﻿using ordermanagement.shared.product_authority_api.Application.Queries.Models;
+﻿using ordermanagement.shared.product_authority_api.Application.Models;
 
 namespace ordermanagement.shared.product_authority_api.Application.Queries.Products
 {

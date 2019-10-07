@@ -1,4 +1,4 @@
-﻿namespace ordermanagement.shared.product_authority_api.Application.Queries.Models
+﻿namespace ordermanagement.shared.product_authority_api.Application.Models
 {
     public class OfferingStatusDto
     {

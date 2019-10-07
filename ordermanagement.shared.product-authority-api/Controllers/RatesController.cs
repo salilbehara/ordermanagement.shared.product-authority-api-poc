@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ordermanagement.shared.product_authority_api.Application.Commands.Products;
-using ordermanagement.shared.product_authority_api.Application.Queries.Offerings;
+using ordermanagement.shared.product_authority_api.Application.Queries.Rates;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ordermanagement.shared.product_authority_api.Controllers
@@ -14,12 +14,12 @@ namespace ordermanagement.shared.product_authority_api.Controllers
     [ApiController]
     [Route("api/v{version:apiVersion}/")]
     [Produces("application/json")]
-    public class OfferingsController : ControllerBase
+    public class RatesController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<OfferingsController> _logger;
+        private readonly ILogger<RatesController> _logger;
 
-        public OfferingsController(IMediator mediator, ILogger<OfferingsController> logger)
+        public RatesController(IMediator mediator, ILogger<RatesController> logger)
         {
             _mediator = mediator;
             _logger = logger;
@@ -27,59 +27,60 @@ namespace ordermanagement.shared.product_authority_api.Controllers
 
 
         /// <summary>
-        /// Get all active product offerings for the supplied product key and order start date.
+        /// Get all active rate details for the supplied rate key and order start date.
         /// </summary>
         [HttpGet]
-        [Route("Products/{productKey}/Offerings")]
-        [SwaggerOperation(OperationId = "Offering_GetOfferingsBasedOnProductKeyAsync")]
-        [ProducesResponseType(typeof(GetOfferingBasedOnProductKeyQueryDto), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOfferingsBasedOnProductKeyAsync([FromRoute, Required] string productKey, DateTime? orderStartDate) => 
-            Ok(await _mediator.Send(new GetOfferingBasedOnProductKeyQuery(productKey, orderStartDate ?? DateTime.UtcNow)));
+        [Route("Rates/{rateKey}")]
+        [SwaggerOperation(OperationId = "Rate_GetRateBasedOnRateKeyAsync")]
+        [ProducesResponseType(typeof(GetRateBasedOnRateKeyQueryDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetRateBasedOnRateKeyAsync([FromRoute, Required] string rateKey, DateTime? orderStartDate) =>
+            Ok(await _mediator.Send(new GetRateBasedOnRateKeyQuery(rateKey, orderStartDate ?? DateTime.UtcNow)));
 
 
         /// <summary>
-        /// Get all active offerings for the supplied offering key and order start date.
+        /// Get all active offering rates for the supplied offering key and order start date.
         /// </summary>
         [HttpGet]
-        [Route("Offerings/{offeringKey}")]
-        [SwaggerOperation(OperationId = "Offering_GetOfferingsBasedOnOfferingKeyAsync")]
-        [ProducesResponseType(typeof(GetOfferingBasedOnOfferingKeyQueryDto), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOfferingsBasedOnOfferingKeyAsync([FromRoute, Required] string offeringKey, DateTime? orderStartDate) =>
-            Ok(await _mediator.Send(new GetOfferingBasedOnOfferingKeyQuery(offeringKey, orderStartDate ?? DateTime.UtcNow)));
+        [Route("Offerings/{offeringKey}/Rates")]
+        [SwaggerOperation(OperationId = "Rate_GetRateBasedOnOfferingKeyAsync")]
+        [ProducesResponseType(typeof(GetRateBasedOnOfferingKeyQueryDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetRateBasedOnOfferingKeyAsync([FromRoute, Required]string offeringKey, DateTime? orderStartDate) =>
+            Ok(await _mediator.Send(new GetRateBasedOnOfferingKeyQuery(offeringKey, orderStartDate ?? DateTime.UtcNow)));
 
 
         /// <summary>
-        /// Get all available offering statuses
+        /// Get all active product rates for the supplied product key and order start date.
         /// </summary>
         [HttpGet]
-        [Route("Offerings/Status")]
-        [SwaggerOperation(OperationId = "Offering_GetAllOfferingStatusesAsync")]
-        [ProducesResponseType(typeof(GetAllOfferingStatusesQueryDto), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllOfferingStatusesAsync() => Ok(await _mediator.Send(new GetAllOfferingStatusesQuery()));
+        [Route("Products/{productKey}/Rates")]
+        [SwaggerOperation(OperationId = "Rate_GetRateBasedOnProductKeyAsync")]
+        [ProducesResponseType(typeof(GetRateBasedOnProductKeyQueryDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetRateBasedOnProductKeyAsync([FromRoute, Required]string productKey, DateTime? orderStartDate) =>
+            Ok(await _mediator.Send(new GetRateBasedOnProductKeyQuery(productKey, orderStartDate ?? DateTime.UtcNow)));
 
 
         /// <summary>
-        /// Get all available offering formats
+        /// Get all available delivery methods
         /// </summary>
         [HttpGet]
-        [Route("Offerings/Formats")]
-        [SwaggerOperation(OperationId = "Offering_GetAllOfferingFormatsAsync")]
-        [ProducesResponseType(typeof(GetAllOfferingFormatsQueryDto), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllOfferingFormatsAsync() => Ok(await _mediator.Send(new GetAllOfferingFormatsQuery()));
+        [Route("Rates/DeliveryMethods")]
+        [SwaggerOperation(OperationId = "Rate_GetAllDeliveryMethodsAsync")]
+        [ProducesResponseType(typeof(GetAllDeliveryMethodsQueryDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllDeliveryMethodsAsync() => Ok(await _mediator.Send(new GetAllDeliveryMethodsQuery()));
 
 
         /// <summary>
-        /// Get all available offering platforms
+        /// Get all available rate types
         /// </summary>
         [HttpGet]
-        [Route("Offerings/Platforms")]
-        [SwaggerOperation(OperationId = "Offering_GetAllOfferingPlatformsAsync")]
-        [ProducesResponseType(typeof(GetAllOfferingPlatformsQueryDto), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllOfferingPlatformsAsync() => Ok(await _mediator.Send(new GetAllOfferingPlatformsQuery()));
+        [Route("Rates/RateTypes")]
+        [SwaggerOperation(OperationId = "Rate_GetAllRateTypesAsync")]
+        [ProducesResponseType(typeof(GetAllRateTypesQueryDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllRateTypesAsync() => Ok(await _mediator.Send(new GetAllRateTypesQuery()));
 
 
         ///// <summary>
-        ///// Add an Offering to the Product
+        ///// Add anRate to the Product
         ///// </summary>
         //[HttpPost]
         //[Route("Products/{productKey}/Offerings")]
@@ -114,7 +115,7 @@ namespace ordermanagement.shared.product_authority_api.Controllers
 
 
         ///// <summary>
-        ///// Update an existing Offering
+        ///// Update an existingRate
         ///// </summary>
         //[HttpPut]
         //[Route("Products/{productKey}/Offerings")]
