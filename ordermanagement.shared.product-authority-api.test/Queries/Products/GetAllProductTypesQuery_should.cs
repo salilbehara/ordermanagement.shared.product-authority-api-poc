@@ -50,7 +50,6 @@ namespace ordermanagement.shared.product_authority_api.test.Queries.Products
                         
             var context = new ProductAuthorityDatabaseContext(options, _mediatorMock.Object);
 
-
             context.ProductTypes.AddRange(_productTypes);
             
             context.SaveChanges();
