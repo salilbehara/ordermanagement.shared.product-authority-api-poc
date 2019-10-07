@@ -80,8 +80,6 @@ namespace ordermanagement.shared.product_authority_api.test.Commands.Products
 
             var context = new ProductAuthorityDatabaseContext(options, _mediatorMock.Object);
 
-            context.ProductTypes.AddRange(_products.Select(x => x.ProductType));
-            context.ProductStatuses.AddRange(_products.Select(x => x.ProductStatus));
             context.Products.AddRange(_products);
 
             context.SaveChanges();

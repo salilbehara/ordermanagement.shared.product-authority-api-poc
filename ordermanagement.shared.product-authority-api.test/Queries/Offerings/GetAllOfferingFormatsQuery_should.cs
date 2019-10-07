@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using ordermanagement.shared.product_authority_api.Application.Commands.Products;
+using ordermanagement.shared.product_authority_api.Application.Queries.Offerings;
 using ordermanagement.shared.product_authority_api.Application.Queries.Products;
 using ordermanagement.shared.product_authority_infrastructure;
 using ordermanagement.shared.product_authority_infrastructure.Entities;
@@ -12,37 +13,34 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ordermanagement.shared.product_authority_api.test.Queries.Products
+namespace ordermanagement.shared.product_authority_api.test.Queries.Offerings
 {
-    public class GetProductBasedOnEffectiveStartDateQuery_should
+    public class GetAllOfferingFormatsQuery_should
     {
         private readonly ProductAuthorityDatabaseContext _context;
-        private List<ProductEntity> _products;
-        private IRequestHandler<GetProductBasedOnEffectiveStartDateQuery, GetProductBasedOnEffectiveStartDateQueryDto> _handler;
+        private List<OfferingFormatEntity> _offeringFormats;
+        private IRequestHandler<GetAllOfferingFormatsQuery, GetAllOfferingFormatsQueryDto> _handler;
         private Mock<IMediator> _mediatorMock = new Mock<IMediator>();
 
-        public GetProductBasedOnEffectiveStartDateQuery_should()
+        public GetAllOfferingFormatsQuery_should()
         {
-            _products = new List<ProductEntity>(new[]
+            _offeringFormats = new List<OfferingFormatEntity>(new[]
             {
-                Any.ProductEntity("key",new DateTime(2019, 01, 01),new DateTime(2019, 02, 01)),
-                Any.ProductEntity("key",new DateTime(2019, 02, 01))
+                Any.OfferingFormatEntity()
             });
-
             _context = GetContextWithData();
-            _handler = new GetProductBasedOnEffectiveStartDateQueryHandler(_context);
-
+            _handler = new GetAllOfferingFormatsQueryHandler(_context);
 
         }
 
         [Fact]
-        public async void Get_Expired_Product_By_Effective_Date()
+        public async void Get_Offering_Formats()
         {
-            var effectiveDate = new DateTime(2019, 01, 15);
-            var query = new GetProductBasedOnEffectiveStartDateQuery("key", effectiveDate);
+            var query = new GetAllOfferingFormatsQuery();
             var response = await _handler.Handle(query, default);
 
-            Assert.Equal(_products.First().ProductName, response.ProductName);
+            Assert.Equal(_offeringFormats.First().OfferingFormatCode, response.OfferingFormats.First().OfferingFormatCode);
+            Assert.Equal(_offeringFormats.First().OfferingFormatName, response.OfferingFormats.First().OfferingFormatName);
         }
 
         private ProductAuthorityDatabaseContext GetContextWithData()
@@ -53,7 +51,8 @@ namespace ordermanagement.shared.product_authority_api.test.Queries.Products
                         
             var context = new ProductAuthorityDatabaseContext(options, _mediatorMock.Object);
 
-            context.Products.AddRange(_products);
+
+            context.OfferingFormats.AddRange(_offeringFormats);
             
             context.SaveChanges();
             return context;
