@@ -12,6 +12,8 @@ namespace ordermanagement.shared.product_authority_api.test
 
         public static bool Bool() => _random.Next(0, 2) == 1;
 
+        public static DateTime DateTime() => new DateTime(Int(2019), Int(12), Int(28));
+
         public static decimal Decimal() => _random.Next(0, int.MaxValue);
 
         public static long Long() => _random.Next(0, int.MaxValue);
@@ -62,7 +64,7 @@ namespace ordermanagement.shared.product_authority_api.test
                 ProductId = productKey.DecodeKeyToId(),
                 ProductKey = productKey,
                 AddedBy = Any.String(),
-                AddedOnUtc = DateTime.Now,
+                AddedOnUtc = System.DateTime.Now,
                 EffectiveStartDate = effectiveDate,
                 EffectiveEndDate = expirationDate ?? new DateTime(9999, 12, 31),
                 LegacyIdSpid = Any.Int(),
@@ -72,12 +74,41 @@ namespace ordermanagement.shared.product_authority_api.test
                 ProductName = Any.String(),
                 PublisherId = Any.Long(),
                 UpdatedBy = Any.String(),
-                UpdatedOnUtc = DateTime.Now,
+                UpdatedOnUtc = System.DateTime.Now,
                 ProductStatus = productStatus,
                 ProductStatusCode = productStatus.ProductStatusCode,
                 ProductType = productType,
                 ProductTypeCode = productType.ProductTypeCode
             };
+        }
+
+        public static OfferingEntity OfferingEntity(string offeringKey, long productId, DateTime effectiveDate, DateTime? expirationDate = null)
+        {
+            var offeringFormat = Any.OfferingFormatEntity();
+            var offeringPlatform = Any.OfferingPlatformEntity();
+            var offeringStatus = Any.OfferingStatusEntity();
+
+            return new OfferingEntity
+            {
+                ProductId = productId,
+                AddedBy = Any.String(),
+                AddedOnUtc = System.DateTime.Now,
+                UpdatedBy = Any.String(),
+                UpdatedOnUtc = System.DateTime.Now,
+                EffectiveStartDate = effectiveDate,
+                EffectiveEndDate = expirationDate ?? new DateTime(9999, 12, 31),
+                OfferingEdition = Any.String(),
+                OfferingFormat = offeringFormat,
+                OfferingFormatCode = offeringFormat.OfferingFormatCode,
+                OfferingId = offeringKey.DecodeKeyToId(),
+                OfferingKey = offeringKey,
+                OfferingPlatform = offeringPlatform,
+                OfferingPlatformCode = offeringPlatform.OfferingPlatformCode,
+                OfferingStatus = offeringStatus,
+                OfferingStatusCode = offeringStatus.OfferingStatusCode
+
+            };
+
         }
 
         public static ProductStatusEntity ProductStatusEntity() => new ProductStatusEntity
@@ -90,6 +121,24 @@ namespace ordermanagement.shared.product_authority_api.test
         {
             ProductTypeCode = Any.String(4),
             ProductTypeName = Any.String()
+        };
+
+        public static OfferingFormatEntity OfferingFormatEntity() => new OfferingFormatEntity
+        {
+            OfferingFormatCode = Any.String(4),
+            OfferingFormatName = Any.String()
+        };
+
+        public static OfferingPlatformEntity OfferingPlatformEntity() => new OfferingPlatformEntity
+        {
+            OfferingPlatformCode = Any.String(4),
+            OfferingPlatformName = Any.String()
+        };
+
+        public static OfferingStatusEntity OfferingStatusEntity() => new OfferingStatusEntity
+        {
+            OfferingStatusCode = Any.String(4),
+            OfferingStatusName = Any.String()
         };
     }
 }
