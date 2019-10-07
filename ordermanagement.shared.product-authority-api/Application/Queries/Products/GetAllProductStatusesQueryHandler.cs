@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using ordermanagement.shared.product_authority_api.Application.Models;
 using ordermanagement.shared.product_authority_infrastructure;
 using System.Linq;
 using System.Threading;
@@ -20,7 +21,7 @@ namespace ordermanagement.shared.product_authority_api.Application.Queries.Produ
         {
             var productStatuses = await _context.ProductStatuses
                 .AsNoTracking()
-                .Select(p => new ProductStatus
+                .Select(p => new ProductStatusDto
                 {
                     ProductStatusCode = p.ProductStatusCode,
                     ProductStatusName = p.ProductStatusName
