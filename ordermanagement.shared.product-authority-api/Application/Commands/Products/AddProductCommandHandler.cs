@@ -1,11 +1,12 @@
-﻿using ordermanagement.shared.product_authority_api.Application.Common;
+﻿using MediatR;
 using ordermanagement.shared.product_authority_infrastructure;
 using ordermanagement.shared.product_authority_infrastructure.Entities;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ordermanagement.shared.product_authority_api.Application.Commands.Products
 {
-    public class AddProductCommandHandler : ICommandHandler<AddProductCommand>
+    public class AddProductCommandHandler : AsyncRequestHandler<AddProductCommand>
     {
         private readonly ProductAuthorityDatabaseContext _context;
 
@@ -14,24 +15,24 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
             _context = context;
         }
 
-        public async Task Execute(AddProductCommand command)
+        protected override async Task Handle(AddProductCommand request, CancellationToken cancellationToken)
         {
-            var request = new ProductEntity
+            var product = new ProductEntity
             {
-                LegacyIdSpid = command.LegacyIdSpid,
-                OnlineIssn = command.OnlineIssn,
-                PrintIssn = command.PrintIssn,
-                ProductName = command.ProductName,
-                ProductDisplayName = command.ProductDisplayName,
-                ProductStatusCode = command.ProductStatusCode,
-                ProductTypeCode = command.ProductTypeCode,
-                PublisherId = command.PublisherId,
-                PublisherProductCode = command.PublisherProductCode,
+                LegacyIdSpid = request.LegacyIdSpid,
+                OnlineIssn = request.OnlineIssn,
+                PrintIssn = request.PrintIssn,
+                ProductName = request.ProductName,
+                ProductDisplayName = request.ProductDisplayName,
+                ProductStatusCode = request.ProductStatusCode,
+                ProductTypeCode = request.ProductTypeCode,
+                PublisherId = request.PublisherId,
+                PublisherProductCode = request.PublisherProductCode,
                 AddedBy = "ProductAuthority"
             };
 
-            await _context.Products.AddAsync(request);
-            await _context.SaveChangesAsync();
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAndPublishEventsAsync(request.CommandEvents);
         }
     }
 }

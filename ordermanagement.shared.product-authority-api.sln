@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ordermanagement.shared.product-authority-api", "ordermanagement.shared.product-authority-api\ordermanagement.shared.product-authority-api.csproj", "{0B6A2B8F-7A6B-4F11-86E3-3BB02FDF7B96}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ordermanagement.shared.product-authority-infrastructure", "ordermanagement.shared.product-authority-api-data-access\ordermanagement.shared.product-authority-infrastructure.csproj", "{BFAB7219-0820-4D2B-81DB-521933EBDDBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ordermanagement.shared.product-authority-infrastructure", "ordermanagement.shared.product-authority-infrastructure\ordermanagement.shared.product-authority-infrastructure.csproj", "{BFAB7219-0820-4D2B-81DB-521933EBDDBA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ordermanagement.shared.product-authority-api.test", "ordermanagement.shared.product-authority-api.test\ordermanagement.shared.product-authority-api.test.csproj", "{4825128F-36DB-4B2E-8C67-2C55DFABD703}"
 EndProject

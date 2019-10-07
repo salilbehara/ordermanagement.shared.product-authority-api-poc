@@ -1,10 +1,11 @@
-﻿using ordermanagement.shared.product_authority_api.Application.Common;
+﻿using MediatR;
+using ordermanagement.shared.product_authority_api.Application.Events;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ordermanagement.shared.product_authority_api.Application.Commands.Products
 {
-    public class UpdateProductCommand : ICommand
+    public class UpdateProductCommand : CommandEvent, IRequest
     {
         [Required, MaxLength(16)]
         public string ProductKey { get; }
@@ -51,6 +52,13 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
             ProductStatusCode = productStatusCode;
             PublisherProductCode = publisherProductCode;
             LegacyIdSpid = legacyIdSpid;
+
+            //Use Mediator to publish the messages --> https://github.com/jbogard/MediatR/wiki
+            var productChangedPublishToSnsTopicEvent = new ProductChangedEvent(productName, productDisplayName, printIssn, onlineIssn,
+               publisherProductCode, "product-updated");
+
+            AddCommandEvent(productChangedPublishToSnsTopicEvent);
+
         }
     }
 }

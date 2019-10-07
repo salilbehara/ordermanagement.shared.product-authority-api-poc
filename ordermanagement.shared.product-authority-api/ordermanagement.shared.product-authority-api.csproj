@@ -23,6 +23,8 @@
     <PackageReference Include="EBSCO.NetCore.Diagnostics" Version="1.0.1" />
     <PackageReference Include="EBSCO.NETCore.WebApi" Version="2.0.0" />
     <PackageReference Include="EBSCO.NETStandard.FeatureFlags" Version="3.0.0" />
+    <PackageReference Include="MediatR" Version="7.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="3.2.0" />
@@ -43,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ordermanagement.shared.product-authority-api-data-access\ordermanagement.shared.product-authority-infrastructure.csproj" />
+    <ProjectReference Include="..\ordermanagement.shared.product-authority-infrastructure\ordermanagement.shared.product-authority-infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

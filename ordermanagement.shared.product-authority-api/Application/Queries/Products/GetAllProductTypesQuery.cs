@@ -1,8 +1,8 @@
-﻿using ordermanagement.shared.product_authority_api.Application.Common;
+﻿using MediatR;
 
 namespace ordermanagement.shared.product_authority_api.Application.Queries.Products
 {
-    public class GetAllProductTypesQuery : IQuery<GetAllProductTypesQueryDto>
+    public class GetAllProductTypesQuery : IRequest<GetAllProductTypesQueryDto>
     {
     }
 }

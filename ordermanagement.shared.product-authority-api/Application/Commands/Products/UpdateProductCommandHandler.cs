@@ -1,15 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ordermanagement.shared.product_authority_api.Application.Common;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using ordermanagement.shared.product_authority_api.Application.Extensions;
 using ordermanagement.shared.product_authority_infrastructure;
 using ordermanagement.shared.product_authority_infrastructure.Entities;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ordermanagement.shared.product_authority_api.Application.Commands.Products
 {
-    public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand>
+    public class UpdateProductCommandHandler : AsyncRequestHandler<UpdateProductCommand>
     {
         private readonly ProductAuthorityDatabaseContext _context;
 
@@ -18,23 +19,23 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
             _context = context;
         }
 
-        public async Task Execute(UpdateProductCommand command)
+        protected override async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var productId = command.ProductKey.DecodeKeyToId();
+            var productId = request.ProductKey.DecodeKeyToId();
             DateTime productEffectiveEndDate;
             long productPublisherId;
 
             var product = await _context.Products
-                .FirstOrDefaultAsync(p => p.ProductId == productId && 
-                                          p.EffectiveStartDate <= command.EffectiveStartDate &&
-                                          p.EffectiveEndDate > command.EffectiveStartDate);
+                .FirstOrDefaultAsync(p => p.ProductId == productId &&
+                                          p.EffectiveStartDate <= request.EffectiveStartDate &&
+                                          p.EffectiveEndDate > request.EffectiveStartDate);
 
             if (product != null)
             {
                 productEffectiveEndDate = product.EffectiveEndDate;
                 productPublisherId = product.PublisherId;
 
-                product.EffectiveEndDate = command.EffectiveStartDate;
+                product.EffectiveEndDate = request.EffectiveStartDate;
                 product.UpdatedBy = "ProductAuthority";
                 product.UpdatedOnUtc = DateTime.UtcNow;
 
@@ -42,29 +43,29 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
             }
             else
             {
-                throw new ValidationException($"No product found for Product Key '{command.ProductKey}' and Product Effective date of '{command.EffectiveStartDate}'");
+                throw new ValidationException($"No product found for Product Key '{request.ProductKey}' and Product Effective date of '{request.EffectiveStartDate}'");
             }
 
-            var request = new ProductEntity
+            var newProduct = new ProductEntity
             {
                 ProductId = productId,
-                ProductKey = command.ProductKey,
-                EffectiveStartDate = command.EffectiveStartDate,
+                ProductKey = request.ProductKey,
+                EffectiveStartDate = request.EffectiveStartDate,
                 EffectiveEndDate = productEffectiveEndDate,
-                LegacyIdSpid = command.LegacyIdSpid,
-                OnlineIssn = command.OnlineIssn,
-                PrintIssn = command.PrintIssn,
-                ProductName = command.ProductName,
-                ProductDisplayName = command.ProductDisplayName,
-                ProductStatusCode = command.ProductStatusCode,
-                ProductTypeCode = command.ProductTypeCode,
+                LegacyIdSpid = request.LegacyIdSpid,
+                OnlineIssn = request.OnlineIssn,
+                PrintIssn = request.PrintIssn,
+                ProductName = request.ProductName,
+                ProductDisplayName = request.ProductDisplayName,
+                ProductStatusCode = request.ProductStatusCode,
+                ProductTypeCode = request.ProductTypeCode,
                 PublisherId = productPublisherId,
-                PublisherProductCode = command.PublisherProductCode,
+                PublisherProductCode = request.PublisherProductCode,
                 AddedBy = "ProductAuthority",
                 AddedOnUtc = DateTime.UtcNow,
             };
 
-            await _context.AddAsync(request);
+            await _context.AddAsync(newProduct);
             await _context.SaveChangesAsync();
         }
     }

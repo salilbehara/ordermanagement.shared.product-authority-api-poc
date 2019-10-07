@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ordermanagement.shared.product_authority_api.Application.Common;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using ordermanagement.shared.product_authority_infrastructure;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ordermanagement.shared.product_authority_api.Application.Queries.Products
 {
-    public class GetAllProductStatusesQueryHandler : IQueryHandler<GetAllProductStatusesQuery, GetAllProductStatusesQueryDto>
+    public class GetAllProductStatusesQueryHandler : IRequestHandler<GetAllProductStatusesQuery, GetAllProductStatusesQueryDto>
     {
         private readonly ProductAuthorityDatabaseContext _context;
 
@@ -15,26 +16,18 @@ namespace ordermanagement.shared.product_authority_api.Application.Queries.Produ
             _context = context;
         }
 
-        public async Task<GetAllProductStatusesQueryDto> Execute(GetAllProductStatusesQuery query)
+        public async Task<GetAllProductStatusesQueryDto> Handle(GetAllProductStatusesQuery request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var productStatuses = await _context.ProductStatuses
-                    .AsNoTracking()
-                    .Select(p => new ProductStatus
-                    {
-                        ProductStatusCode = p.ProductStatusCode,
-                        ProductStatusName = p.ProductStatusName
-                    })
-                    .ToListAsync();
+            var productStatuses = await _context.ProductStatuses
+                .AsNoTracking()
+                .Select(p => new ProductStatus
+                {
+                    ProductStatusCode = p.ProductStatusCode,
+                    ProductStatusName = p.ProductStatusName
+                })
+                .ToListAsync();
 
-                return new GetAllProductStatusesQueryDto { ProductStatuses = productStatuses };
-
-            }
-            catch (System.Exception ex)
-            {
-                throw;
-            }
+            return new GetAllProductStatusesQueryDto { ProductStatuses = productStatuses };
         }
     }
 }
