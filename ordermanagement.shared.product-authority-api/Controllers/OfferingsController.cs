@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ordermanagement.shared.product_authority_api.Application.Commands.Products;
+using ordermanagement.shared.product_authority_api.Application.Commands.Offerings;
 using ordermanagement.shared.product_authority_api.Application.Queries.Offerings;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -78,73 +78,72 @@ namespace ordermanagement.shared.product_authority_api.Controllers
         public async Task<IActionResult> GetAllOfferingPlatformsAsync() => Ok(await _mediator.Send(new GetAllOfferingPlatformsQuery()));
 
 
-        ///// <summary>
-        ///// Add an Offering to the Product
-        ///// </summary>
-        //[HttpPost]
-        //[Route("Products/{productKey}/Offerings")]
-        //[SwaggerOperation(OperationId = "Offering_AddOfferingAsync")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<IActionResult> AddOfferingAsync([FromQuery, Required]string productKey, [FromBody]AddProductDto request)
-        //{
-        //    try
-        //    {
-        //        var addProductCommand = new AddProductCommand(request.ProductName, request.ProductDisplayName, request.PublisherId, request.PrintIssn,
-        //            request.OnlineIssn, request.ProductTypeCode, request.ProductStatusCode, request.PublisherProductCode, request.LegacyIdSpid);
+        /// <summary>
+        /// Create a new offering for the product specified by the product key
+        /// </summary>
+        [HttpPost]
+        [Route("Products/{productKey}/Offerings")]
+        [SwaggerOperation(OperationId = "Offering_AddOfferingAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AddOfferingAsync([FromQuery, Required]string productKey, [FromBody]AddOfferingDto request)
+        {
+            try
+            {
+                var addOfferingCommand = new AddOfferingCommand(productKey, request.OrderStartDate, request.OfferingFormatCode, request.OfferingPlatformCode, request.OfferingStatusCode, request.OfferingEdition);
 
-        //        await _mediator.Send(addProductCommand);
+                await _mediator.Send(addOfferingCommand);
 
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Something went wrong in AddProductAsync");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Something went wrong in AddOfferingAsync");
 
-        //        var errorResponse = new ProblemDetails()
-        //        {
-        //            Title = "An unexpected error occurred. Please try again later.",
-        //            Status = StatusCodes.Status500InternalServerError,
-        //            Detail = ex.Message
-        //        };
+                var errorResponse = new ProblemDetails()
+                {
+                    Title = "An unexpected error occurred. Please try again later.",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Detail = ex.Message
+                };
 
-        //        return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
-        //    }
-        //}
+                return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
+            }
+        }
 
 
-        ///// <summary>
-        ///// Update an existing Offering
-        ///// </summary>
-        //[HttpPut]
-        //[Route("Products/{productKey}/Offerings")]
-        //[SwaggerOperation(OperationId = "Offering_UpdateProductAsync")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<IActionResult> UpdateProductAsync([FromQuery, Required]string productKey, [FromBody]UpdateProductDto request)
-        //{
-        //    try
-        //    {
-        //        var updateProductCommand = new UpdateProductCommand(request.ProductKey, request.EffectiveStartDate, request.ProductName, request.ProductDisplayName, request.PrintIssn, request.OnlineIssn,
-        //            request.ProductTypeCode, request.ProductStatusCode, request.PublisherProductCode, request.LegacyIdSpid);
+        /// <summary>
+        /// Update an existing offering
+        /// </summary>
+        [HttpPut]
+        [Route("Products/{productKey}/Offerings/{offeringKey}")]
+        [SwaggerOperation(OperationId = "Offering_UpdateOfferingAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateOfferingAsync([FromRoute, Required]string productKey, [FromRoute, Required]string offeringKey, [FromBody]UpdateOfferingDto request)
+        {
+            try
+            {
+                var updateOfferingCommand = new UpdateOfferingCommand(productKey, offeringKey, request.ChangeEffectiveDate ?? DateTime.UtcNow, 
+                    request.OfferingFormatCode, request.OfferingPlatformCode, request.OfferingStatusCode, request.OfferingEdition);
 
-        //        await _mediator.Send(updateProductCommand);
+                await _mediator.Send(updateOfferingCommand);
 
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Something went wrong in AddProductAsync");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Something went wrong in UpdateOfferingAsync");
 
-        //        var errorResponse = new ProblemDetails()
-        //        {
-        //            Title = "An unexpected error occurred. Please try again later.",
-        //            Status = StatusCodes.Status500InternalServerError,
-        //            Detail = ex.Message
-        //        };
+                var errorResponse = new ProblemDetails()
+                {
+                    Title = "An unexpected error occurred. Please try again later.",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Detail = ex.Message
+                };
 
-        //        return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
-        //    }
-        //}
+                return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
+            }
+        }
     }
 }
