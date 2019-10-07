@@ -14,35 +14,32 @@ using Xunit;
 
 namespace ordermanagement.shared.product_authority_api.test.Queries.Products
 {
-    public class GetProductBasedOnEffectiveStartDateQuery_should
+    public class GetAllProductTypesQuery_should
     {
         private readonly ProductAuthorityDatabaseContext _context;
-        private List<ProductEntity> _products;
-        private IRequestHandler<GetProductBasedOnEffectiveStartDateQuery, GetProductBasedOnEffectiveStartDateQueryDto> _handler;
+        private List<ProductTypeEntity> _productTypes;
+        private IRequestHandler<GetAllProductTypesQuery, GetAllProductTypesQueryDto> _handler;
         private Mock<IMediator> _mediatorMock = new Mock<IMediator>();
 
-        public GetProductBasedOnEffectiveStartDateQuery_should()
+        public GetAllProductTypesQuery_should()
         {
-            _products = new List<ProductEntity>(new[]
+            _productTypes = new List<ProductTypeEntity>(new[]
             {
-                Any.ProductEntity("key",new DateTime(2019, 01, 01),new DateTime(2019, 02, 01)),
-                Any.ProductEntity("key",new DateTime(2019, 02, 01))
+                Any.ProductTypeEntity()
             });
-
             _context = GetContextWithData();
-            _handler = new GetProductBasedOnEffectiveStartDateQueryHandler(_context);
-
+            _handler = new GetAllProductTypesQueryHandler(_context);
 
         }
 
         [Fact]
-        public async void Get_Expired_Product_By_Effective_Date()
+        public async void Get_Product_Types()
         {
-            var effectiveDate = new DateTime(2019, 01, 15);
-            var query = new GetProductBasedOnEffectiveStartDateQuery("key", effectiveDate);
+            var query = new GetAllProductTypesQuery();
             var response = await _handler.Handle(query, default);
 
-            Assert.Equal(_products.First().ProductName, response.ProductName);
+            Assert.Equal(_productTypes.First().ProductTypeCode, response.ProductTypes.First().ProductTypeCode);
+            Assert.Equal(_productTypes.First().ProductTypeName, response.ProductTypes.First().ProductTypeName);
         }
 
         private ProductAuthorityDatabaseContext GetContextWithData()
@@ -54,9 +51,7 @@ namespace ordermanagement.shared.product_authority_api.test.Queries.Products
             var context = new ProductAuthorityDatabaseContext(options, _mediatorMock.Object);
 
 
-            context.ProductTypes.AddRange(_products.Select(x => x.ProductType));
-            context.ProductStatuses.AddRange(_products.Select(x => x.ProductStatus));
-            context.Products.AddRange(_products);
+            context.ProductTypes.AddRange(_productTypes);
             
             context.SaveChanges();
             return context;

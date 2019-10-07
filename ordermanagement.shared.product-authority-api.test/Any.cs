@@ -1,8 +1,8 @@
-﻿using ordermanagement.shared.product_authority_infrastructure.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using ordermanagement.shared.product_authority_api.Application.Extensions;
+using ordermanagement.shared.product_authority_infrastructure.Entities;
 
 namespace ordermanagement.shared.product_authority_api.test
 {
