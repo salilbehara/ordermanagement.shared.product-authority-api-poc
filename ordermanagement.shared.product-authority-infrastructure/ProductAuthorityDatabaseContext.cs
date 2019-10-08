@@ -31,17 +31,20 @@ namespace ordermanagement.shared.product_authority_infrastructure
 
         public async Task<bool> SaveChangesAndPublishEventsAsync(IReadOnlyCollection<INotification> domainEvents, CancellationToken cancellationToken = default)
         {
+            // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
+            // performed through the DbContext will be committed
+            await base.SaveChangesAsync(cancellationToken);
+
             // Dispatch Domain Events collection. 
             // Choices:
             // A) Right BEFORE committing data (EF SaveChanges) into the DB will make a single transaction including  
             // side effects from the domain event handlers which are using the same DbContext with "InstancePerLifetimeScope" or "scoped" lifetime
             // B) Right AFTER committing data (EF SaveChanges) into the DB will make multiple transactions. 
             // You will need to handle eventual consistency and compensatory actions in case of failures in any of the Handlers. 
-            await _mediator.DispatchDomainEventsAsync(this, domainEvents);
-
-            // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
-            // performed through the DbContext will be committed
-            await base.SaveChangesAsync(cancellationToken);
+            if (domainEvents != null && domainEvents.Count > 0)
+            {
+                await _mediator.DispatchDomainEventsAsync(this, domainEvents);
+            }
 
             return true;
         }
@@ -51,7 +54,7 @@ namespace ordermanagement.shared.product_authority_infrastructure
             // You did not see this. Just imagine it is masked.
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("Host=product-authority.cluster-c4w82moezzdt.us-east-1.rds.amazonaws.com;Database=product_authority_3;Username=XXXX;Password=XXXXX");
+                optionsBuilder.UseNpgsql("Host=product-authority.cluster-c4w82moezzdt.us-east-1.rds.amazonaws.com;Database=product_authority_3;Username=test;Password=test1234");
             }
         }
 
