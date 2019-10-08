@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ordermanagement.shared.product-authority-api-data-access\ordermanagement.shared.product-authority-infrastructure.csproj" />
     <ProjectReference Include="..\ordermanagement.shared.product-authority-api\ordermanagement.shared.product-authority-api.csproj" />
     <ProjectReference Include="..\ordermanagement.shared.product-authority-infrastructure\ordermanagement.shared.product-authority-infrastructure.csproj" />
   </ItemGroup>
