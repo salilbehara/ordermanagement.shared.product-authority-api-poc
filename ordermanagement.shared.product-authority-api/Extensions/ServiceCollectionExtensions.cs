@@ -60,6 +60,7 @@ namespace ordermanagement.shared.product_authority_api.Extensions
                 o.ResolveConflictingActions(c => c.First());
                 o.EnableAnnotations();
                 o.SchemaFilter<SwaggerEnumNamesFilter>();
+                o.AddFluentValidationRules();
             });
             return services;
         }

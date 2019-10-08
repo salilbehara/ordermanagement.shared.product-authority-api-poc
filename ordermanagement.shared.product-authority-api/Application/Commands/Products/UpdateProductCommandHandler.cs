@@ -25,27 +25,21 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
             DateTime productEffectiveEndDate;
             long productPublisherId;
 
+            //Update the existing Product state
             var product = await _context.Products
                 .FirstOrDefaultAsync(p => p.ProductId == productId &&
                                           p.EffectiveStartDate <= request.EffectiveStartDate &&
                                           p.EffectiveEndDate > request.EffectiveStartDate);
 
-            if (product != null)
-            {
-                productEffectiveEndDate = product.EffectiveEndDate;
-                productPublisherId = product.PublisherId;
+            productEffectiveEndDate = product.EffectiveEndDate;
+            productPublisherId = product.PublisherId;
 
-                product.EffectiveEndDate = request.EffectiveStartDate;
-                product.UpdatedBy = "ProductAuthority";
-                product.UpdatedOnUtc = DateTime.UtcNow;
+            product.EffectiveEndDate = request.EffectiveStartDate;
+            product.UpdatedBy = "ProductAuthority";
+            product.UpdatedOnUtc = DateTime.UtcNow;
 
-                //_context.Update(product);
-            }
-            else
-            {
-                throw new ValidationException($"No product found for Product Key '{request.ProductKey}' and Product Effective date of '{request.EffectiveStartDate}'");
-            }
 
+            //Add the new Product state
             var newProduct = new ProductEntity
             {
                 ProductId = productId,
