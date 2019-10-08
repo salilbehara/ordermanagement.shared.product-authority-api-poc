@@ -4,6 +4,7 @@ using Moq;
 using ordermanagement.shared.product_authority_api.Application.Commands.Products;
 using ordermanagement.shared.product_authority_api.Application.Queries.Offerings;
 using ordermanagement.shared.product_authority_api.Application.Queries.Products;
+using ordermanagement.shared.product_authority_api.Application.Queries.Rates;
 using ordermanagement.shared.product_authority_infrastructure;
 using ordermanagement.shared.product_authority_infrastructure.Entities;
 using System;
@@ -15,46 +16,48 @@ using Xunit;
 
 namespace ordermanagement.shared.product_authority_api.test.Queries.Offerings
 {
-    public class GetOfferingBasedOnProductKeyQuery_should
+    public class GetRateBasedOnRateKeyQuery_should
     {
         private readonly ProductAuthorityDatabaseContext _context;
-        private List<OfferingFormatEntity> _offeringFormats;
-        private IRequestHandler<GetOfferingBasedOnProductKeyQuery, GetOfferingBasedOnProductKeyQueryDto> _handler;
+        private List<RateEntity> _rates;
+        private IRequestHandler<GetRateBasedOnRateKeyQuery, GetRateBasedOnRateKeyQueryDto> _handler;
         private Mock<IMediator> _mediatorMock = new Mock<IMediator>();
         private List<ProductEntity> _products;
         private List<OfferingEntity> _offerings;
 
-        public GetOfferingBasedOnProductKeyQuery_should()
+        public GetRateBasedOnRateKeyQuery_should()
         {
             _products = new List<ProductEntity>(new[]
             {
-                Any.ProductEntity(Any.String(),new DateTime(2019, 02, 01)),
                 Any.ProductEntity(Any.String(),new DateTime(2019, 02, 01))
             });
             _offerings = new List<OfferingEntity>(new[]
             {
-                Any.OfferingEntity("key", _products.First().ProductId, _products.First().EffectiveStartDate),
-                Any.OfferingEntity("key2", _products.Last().ProductId, _products.Last().EffectiveStartDate)
+                Any.OfferingEntity(Any.String(), _products.First().ProductId, _products.First().EffectiveStartDate)
+            });
+            _rates = new List<RateEntity>(new[]
+            {
+                Any.RateEntity("key", _products.First().ProductId, _offerings.First().OfferingId, Any.DateTime()),
+                Any.RateEntity("key", _products.First().ProductId, _offerings.First().OfferingId, Any.DateTime()),
+                Any.RateEntity("anotherkey", _products.First().ProductId, _offerings.First().OfferingId, Any.DateTime()),
             });
             _context = GetContextWithData();
-            _handler = new GetOfferingBasedOnProductKeyQueryHandler(_context);
+            _handler = new GetRateBasedOnRateKeyQueryHandler(_context);
 
         }
 
         [Fact]
-        public async void Get_Offering_By_Product_Key()
+        public async void Get_Rates_Based_On_Rate_Key()
         {
-            var query = new GetOfferingBasedOnProductKeyQuery(_products.First().ProductKey);
+            var query = new GetRateBasedOnRateKeyQuery(_rates.First().RateKey);
             var response = await _handler.Handle(query, default);
-            Assert.NotEmpty(response.Offerings);
+            var matchingRateKeys = _rates
+                .Where(o => o.RateKey == _rates.First().RateKey)
+                .Select(x => x.RateKey);
 
-            var matchingOfferingKeys = _offerings
-                .Where(o => o.ProductId == _products.First().ProductId)
-                .Select(x => x.OfferingKey);
+            Assert.All(response.Rates,
+                o => Assert.Contains(o.RateKey, matchingRateKeys));
 
-            Assert.All(response.Offerings,
-                o => Assert.Contains(o.OfferingKey, matchingOfferingKeys));
-                    
         }
 
         private ProductAuthorityDatabaseContext GetContextWithData()
@@ -67,7 +70,8 @@ namespace ordermanagement.shared.product_authority_api.test.Queries.Offerings
 
             context.Products.AddRange(_products);
             context.Offerings.AddRange(_offerings);
-
+            context.Rates.AddRange(_rates);
+            
             context.SaveChanges();
             return context;
         }

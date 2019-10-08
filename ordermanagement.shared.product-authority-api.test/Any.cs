@@ -12,9 +12,10 @@ namespace ordermanagement.shared.product_authority_api.test
 
         public static bool Bool() => _random.Next(0, 2) == 1;
 
-        public static DateTime DateTime() => new DateTime(Int(2019), Int(12), Int(28));
+        public static DateTime DateTime() => System.DateTime.Now.AddDays(_random.Next(-1000, 1000));
 
-        public static decimal Decimal() => _random.Next(0, int.MaxValue);
+        public static decimal Decimal(decimal max = decimal.MaxValue) => _random.Next(0, int.MaxValue);
+
 
         public static long Long() => _random.Next(0, int.MaxValue);
 
@@ -140,5 +141,54 @@ namespace ordermanagement.shared.product_authority_api.test
             OfferingStatusCode = Any.String(4),
             OfferingStatusName = Any.String()
         };
+
+        public static DeliveryMethodEntity DeliveryMethodEntity() => new DeliveryMethodEntity
+        {
+            DeliveryMethodCode = Any.String(4),
+            DeliveryMethodName = Any.String()
+        };
+
+        public static RateTypeEntity RateTypeEntity() => new RateTypeEntity
+        {
+            RateTypeCode = Any.String(4),
+            RateTypeName = Any.String()
+        };
+
+        public static RateEntity RateEntity(string rateKey, long productId, long offeringId, DateTime effectiveDate, DateTime? expirationDate = null)
+        {
+            var deliveryMethod = DeliveryMethodEntity();
+            var rateType = RateTypeEntity();
+
+            return new RateEntity
+            {
+                RateKey = rateKey,
+                RateId = rateKey.DecodeKeyToId(),
+                OfferingId = offeringId,
+                AddedBy = Any.String(),
+                AddedOnUtc = System.DateTime.Now,
+                UpdatedBy = Any.String(),
+                UpdatedOnUtc = System.DateTime.Now,
+                EffectiveStartDate = effectiveDate,
+                EffectiveEndDate = expirationDate ?? new DateTime(9999, 12, 31),
+                CommissionAmount = Any.Decimal(99999),
+                CommissionPercent = Any.Decimal(100),
+                CostAmount = Any.Decimal(99999),
+                DeliveryMethod = deliveryMethod,
+                DeliveryMethodCode = deliveryMethod.DeliveryMethodCode,
+                EffortKey = Any.String(),
+                LegacyIdTitleNumber = Any.Int(),
+                ListCode = Any.String(4),
+                NewRenewalRateIndicator = Any.String(1),
+                PostageAmount = Any.Decimal(99999),
+                ProductId = productId,
+                Quantity = Any.Int(),
+                RateClassificationId = Any.Int(),
+                RateType = rateType,
+                RateTypeCode = rateType.RateTypeCode,
+                TermLength = Any.Int(),
+                TermUnit = Any.String(4),
+                UnitRetailAmount = Any.Decimal(99999)
+            };
+        }
     }
 }

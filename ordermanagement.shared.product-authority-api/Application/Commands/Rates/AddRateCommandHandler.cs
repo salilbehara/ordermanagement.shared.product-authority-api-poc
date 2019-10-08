@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ordermanagement.shared.product_authority_api.Application.Commands.Offerings
+namespace ordermanagement.shared.product_authority_api.Application.Commands.Rates
 {
     public class AddRateCommandHandler : AsyncRequestHandler<AddRateCommand>
     {
@@ -39,7 +39,7 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Offe
 
             if (offering == null)
             {
-                throw new ValidationException($"No active offering found for Offering Key '{request.OfferingKey}' and Order End date of '{request.OrderStartDate}'");
+                throw new ValidationException($"No active offering found for Offering Key '{request.OfferingKey}' and Order End date of '{request.OrderEndDate}'");
             }
 
             var rate = new RateEntity

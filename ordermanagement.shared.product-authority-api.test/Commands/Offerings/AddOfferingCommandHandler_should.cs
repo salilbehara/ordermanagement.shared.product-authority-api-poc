@@ -57,7 +57,7 @@ namespace ordermanagement.shared.Offering_authority_api.test.Commands.Offerings
         }
 
         [Fact]
-        public async Task Throw_Validation_Error_If_Product_Doesnt_ExistAsync()
+        public async Task Throw_Validation_Error_If_Product_Doesnt_Exist()
         {
             _command = new AddOfferingCommand(_products.First().ProductKey + "nope", _products.First().EffectiveStartDate, Any.String(), Any.String(), Any.String(), Any.String());
             _ = await Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(_command, default));
