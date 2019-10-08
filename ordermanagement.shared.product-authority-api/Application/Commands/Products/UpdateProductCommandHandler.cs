@@ -39,7 +39,7 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
                 product.UpdatedBy = "ProductAuthority";
                 product.UpdatedOnUtc = DateTime.UtcNow;
 
-                _context.Update(product);
+                //_context.Update(product);
             }
             else
             {
