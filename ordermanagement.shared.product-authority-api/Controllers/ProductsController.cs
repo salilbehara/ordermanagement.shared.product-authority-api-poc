@@ -27,7 +27,7 @@ namespace ordermanagement.shared.product_authority_api.Controllers
 
 
         /// <summary>
-        /// Get Product details for the supplied product id and effective start date.
+        /// Get product details for the supplied product key and effective start date.
         /// </summary>
         [HttpGet]
         [SwaggerOperation(OperationId = "Product_GetProductBasedOnEffectiveStartDateAsync")]
@@ -37,7 +37,7 @@ namespace ordermanagement.shared.product_authority_api.Controllers
 
 
         /// <summary>
-        /// Get all available Product statuses
+        /// Get all available product statuses
         /// </summary>
         [HttpGet]
         [Route("Status")]
@@ -47,7 +47,7 @@ namespace ordermanagement.shared.product_authority_api.Controllers
 
 
         /// <summary>
-        /// Get all available Product types
+        /// Get all available product types
         /// </summary>
         [HttpGet]
         [Route("Types")]
@@ -57,7 +57,7 @@ namespace ordermanagement.shared.product_authority_api.Controllers
 
 
         /// <summary>
-        /// Add a Product
+        /// Add a new Product
         /// </summary>
         [HttpPost]
         [SwaggerOperation(OperationId = "Product_AddProductAsync")]
@@ -91,7 +91,7 @@ namespace ordermanagement.shared.product_authority_api.Controllers
 
 
         /// <summary>
-        /// Update a Product
+        /// Update an existing product
         /// </summary>
         [HttpPut]
         [SwaggerOperation(OperationId = "Product_UpdateProductAsync")]

@@ -6,7 +6,7 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Offe
 {
     public class AddOfferingCommand : CommandEvent, IRequest
     {
-        [Required]
+        [Required, MaxLength(16)]
         public string ProductKey { get; }
 
         public DateTime? OrderStartDate { get; }

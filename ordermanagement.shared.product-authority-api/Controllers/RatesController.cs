@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ordermanagement.shared.product_authority_api.Application.Commands.Products;
+using ordermanagement.shared.product_authority_api.Application.Commands.Rates;
 using ordermanagement.shared.product_authority_api.Application.Queries.Rates;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -79,73 +79,77 @@ namespace ordermanagement.shared.product_authority_api.Controllers
         public async Task<IActionResult> GetAllRateTypesAsync() => Ok(await _mediator.Send(new GetAllRateTypesQuery()));
 
 
-        ///// <summary>
-        ///// Add anRate to the Product
-        ///// </summary>
-        //[HttpPost]
-        //[Route("Products/{productKey}/Offerings")]
-        //[SwaggerOperation(OperationId = "Offering_AddOfferingAsync")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<IActionResult> AddOfferingAsync([FromQuery, Required]string productKey, [FromBody]AddProductDto request)
-        //{
-        //    try
-        //    {
-        //        var addProductCommand = new AddProductCommand(request.ProductName, request.ProductDisplayName, request.PublisherId, request.PrintIssn,
-        //            request.OnlineIssn, request.ProductTypeCode, request.ProductStatusCode, request.PublisherProductCode, request.LegacyIdSpid);
+        /// <summary>
+        /// Add a rate to the product offering
+        /// </summary>
+        [HttpPost]
+        [Route("Products/{productKey}/Offerings/{offeringKey}/Rates")]
+        [SwaggerOperation(OperationId = "Rate_AddRateAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AddRateAsync([FromRoute, Required]string productKey, [FromRoute, Required]string offeringKey, [FromBody]AddRateDto request)
+        {
+            try
+            {
+                var addRateCommand = new AddRateCommand(productKey, offeringKey, request.OrderStartDate ?? DateTime.UtcNow, request.OrderEndDate ?? DateTime.MaxValue, 
+                                                        request.RateClassificationId, request.UnitRetailAmount, request.CommissionAmount,
+                                                        request.CommissionPercent, request.CostAmount, request.PostageAmount, request.DeliveryMethodCode, request.TermLength, request.TermUnit, request.Quantity,
+                                                        request.NewRenewalRateIndicator, request.EffortKey, request.LegacyIdTitleNumber, request.ListCode, request.RateTypeCode);
 
-        //        await _mediator.Send(addProductCommand);
+                await _mediator.Send(addRateCommand);
 
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Something went wrong in AddProductAsync");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Something went wrong in AddRateAsync");
 
-        //        var errorResponse = new ProblemDetails()
-        //        {
-        //            Title = "An unexpected error occurred. Please try again later.",
-        //            Status = StatusCodes.Status500InternalServerError,
-        //            Detail = ex.Message
-        //        };
+                var errorResponse = new ProblemDetails()
+                {
+                    Title = "An unexpected error occurred. Please try again later.",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Detail = ex.Message
+                };
 
-        //        return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
-        //    }
-        //}
+                return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
+            }
+        }
 
 
-        ///// <summary>
-        ///// Update an existingRate
-        ///// </summary>
-        //[HttpPut]
-        //[Route("Products/{productKey}/Offerings")]
-        //[SwaggerOperation(OperationId = "Offering_UpdateProductAsync")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<IActionResult> UpdateProductAsync([FromQuery, Required]string productKey, [FromBody]UpdateProductDto request)
-        //{
-        //    try
-        //    {
-        //        var updateProductCommand = new UpdateProductCommand(request.ProductKey, request.EffectiveStartDate, request.ProductName, request.ProductDisplayName, request.PrintIssn, request.OnlineIssn,
-        //            request.ProductTypeCode, request.ProductStatusCode, request.PublisherProductCode, request.LegacyIdSpid);
+        /// <summary>
+        /// Update an existing Rate
+        /// </summary>
+        [HttpPut]
+        [Route("Products/{productKey}/Offerings/{offeringKey}/Rates/{rateKey}")]
+        [SwaggerOperation(OperationId = "Rate_UpdateRateAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateRateAsync([FromRoute, Required]string productKey, [FromRoute, Required]string offeringKey, [FromRoute, Required]string rateKey, [FromBody]UpdateRateDto request)
+        {
+            try
+            {
+                var updateRateCommand = new UpdateRateCommand(productKey, offeringKey, rateKey, request.OrderStartDate ?? DateTime.UtcNow, request.OrderEndDate ?? DateTime.MaxValue,
+                                                        request.RateClassificationId, request.UnitRetailAmount, request.CommissionAmount,
+                                                        request.CommissionPercent, request.CostAmount, request.PostageAmount, request.DeliveryMethodCode, request.TermLength, request.TermUnit, request.Quantity,
+                                                        request.NewRenewalRateIndicator, request.EffortKey, request.LegacyIdTitleNumber, request.ListCode, request.RateTypeCode);
 
-        //        await _mediator.Send(updateProductCommand);
+                await _mediator.Send(updateRateCommand);
 
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Something went wrong in AddProductAsync");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Something went wrong in AddProductAsync");
 
-        //        var errorResponse = new ProblemDetails()
-        //        {
-        //            Title = "An unexpected error occurred. Please try again later.",
-        //            Status = StatusCodes.Status500InternalServerError,
-        //            Detail = ex.Message
-        //        };
+                var errorResponse = new ProblemDetails()
+                {
+                    Title = "An unexpected error occurred. Please try again later.",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Detail = ex.Message
+                };
 
-        //        return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
-        //    }
-        //}
+                return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
+            }
+        }
     }
 }
