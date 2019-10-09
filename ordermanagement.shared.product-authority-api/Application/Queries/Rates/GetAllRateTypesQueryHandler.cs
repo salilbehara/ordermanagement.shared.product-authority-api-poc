@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using ordermanagement.shared.product_authority_api.Application.Models;
+using ordermanagement.shared.product_authority_api.Application.Extensions;
 using ordermanagement.shared.product_authority_infrastructure;
 using System.Linq;
 using System.Threading;
@@ -21,11 +21,7 @@ namespace ordermanagement.shared.product_authority_api.Application.Queries.Rates
         {
             var rateTypes = await _context.RateTypes
                 .AsNoTracking()
-                .Select(r => new RateTypeDto
-                {
-                    RateTypeCode = r.RateTypeCode,
-                    RateTypeName = r.RateTypeName
-                })
+                .Select(r => r.ToRateTypeDto())
                 .ToListAsync();
 
             return new GetAllRateTypesQueryDto { RateTypes = rateTypes };

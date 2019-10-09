@@ -22,12 +22,12 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Offe
         protected override async Task Handle(AddOfferingCommand request, CancellationToken cancellationToken)
         {
             var productId = request.ProductKey.DecodeKeyToId();
-            var product = await _context.Products
-                .FirstOrDefaultAsync(p => p.ProductId == productId &&
-                                          p.EffectiveStartDate <= request.OrderStartDate &&
-                                          p.EffectiveEndDate > request.OrderStartDate);
+            var isProductActive = await _context.Products
+                .AnyAsync(p => p.ProductId == productId &&
+                               p.EffectiveStartDate <= request.OrderStartDate &&
+                               p.EffectiveEndDate > request.OrderStartDate);
 
-            if (product == null)
+            if (!isProductActive)
             {
                 throw new ValidationException($"No active product found for Product Key '{request.ProductKey}' and Order Effective date of '{request.OrderStartDate}'");
             }

@@ -44,16 +44,8 @@ namespace ordermanagement.shared.product_authority_api.Application.Queries.Rates
                     EffortKey = r.EffortKey,
                     LegacyIdTitleNumber = r.LegacyIdTitleNumber,
                     ListCode = r.ListCode,
-                    DeliveryMethod = new DeliveryMethodDto
-                    {
-                        DeliveryMethodCode = r.DeliveryMethod.DeliveryMethodCode,
-                        DeliveryMethodName = r.DeliveryMethod.DeliveryMethodName
-                    },
-                    RateType = new RateTypeDto
-                    {
-                        RateTypeCode = r.RateType.RateTypeCode,
-                        RateTypeName = r.RateType.RateTypeName
-                    }
+                    DeliveryMethod = r.DeliveryMethod.ToDeliveryMethodDto(),
+                    RateType = r.RateType.ToRateTypeDto()
                 })
                 .ToListAsync();
 

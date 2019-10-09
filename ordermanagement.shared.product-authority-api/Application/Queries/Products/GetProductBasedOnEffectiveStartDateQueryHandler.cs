@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ordermanagement.shared.product_authority_api.Application.Extensions;
-using ordermanagement.shared.product_authority_api.Application.Models;
 using ordermanagement.shared.product_authority_infrastructure;
 using System.Linq;
 using System.Threading;
@@ -38,16 +37,8 @@ namespace ordermanagement.shared.product_authority_api.Application.Queries.Produ
                     ProductName = p.ProductName,
                     PublisherId = p.PublisherId,
                     PublisherProductCode = p.PublisherProductCode,
-                    ProductStatus = new ProductStatusDto
-                    {
-                        ProductStatusCode = p.ProductStatus.ProductStatusCode,
-                        ProductStatusName = p.ProductStatus.ProductStatusName
-                    },
-                    ProductType = new ProductTypeDto
-                    {
-                        ProductTypeCode = p.ProductType.ProductTypeCode,
-                        ProductTypeName = p.ProductType.ProductTypeName
-                    }
+                    ProductStatus = p.ProductStatus.ToProductStatusDto(),
+                    ProductType = p.ProductType.ToProductTypeDto()
                 })
                 .FirstOrDefaultAsync();
 

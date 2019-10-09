@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using ordermanagement.shared.product_authority_api.Application.Models;
+using ordermanagement.shared.product_authority_api.Application.Extensions;
 using ordermanagement.shared.product_authority_infrastructure;
 using System.Linq;
 using System.Threading;
@@ -21,11 +21,7 @@ namespace ordermanagement.shared.product_authority_api.Application.Queries.Produ
         {
             var productTypes = await _context.ProductTypes
                 .AsNoTracking()
-                .Select(p => new ProductTypeDto
-                {
-                    ProductTypeCode = p.ProductTypeCode,
-                    ProductTypeName = p.ProductTypeName
-                })
+                .Select(p => p.ToProductTypeDto())
                 .ToListAsync();
 
             return new GetAllProductTypesQueryDto { ProductTypes = productTypes };

@@ -4,9 +4,99 @@
         <name>ordermanagement.shared.product-authority-api</name>
     </assembly>
     <members>
-        <member name="M:ordermanagement.shared.product_authority_api.Controllers.ProductsController.GetProductAsync(System.String,System.Nullable{System.DateTime})">
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.OfferingsController.GetOfferingsBasedOnProductKeyAsync(System.String,System.Nullable{System.DateTime})">
             <summary>
-            Get Product details for the supplied product id and date range.
+            Get all active product offerings for the supplied product key and order start date.
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.OfferingsController.GetOfferingsBasedOnOfferingKeyAsync(System.String,System.Nullable{System.DateTime})">
+            <summary>
+            Get all active offerings for the supplied offering key and order start date.
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.OfferingsController.GetAllOfferingStatusesAsync">
+            <summary>
+            Get all available offering statuses
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.OfferingsController.GetAllOfferingFormatsAsync">
+            <summary>
+            Get all available offering formats
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.OfferingsController.GetAllOfferingPlatformsAsync">
+            <summary>
+            Get all available offering platforms
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.OfferingsController.AddOfferingAsync(System.String,ordermanagement.shared.product_authority_api.Application.Commands.Offerings.AddOfferingDto)">
+            <summary>
+            Create a new offering for the product specified by the product key
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.OfferingsController.UpdateOfferingAsync(System.String,System.String,ordermanagement.shared.product_authority_api.Application.Commands.Offerings.UpdateOfferingDto)">
+            <summary>
+            Update an existing offering
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.ProductsController.GetProductBasedOnEffectiveStartDateAsync(System.String,System.Nullable{System.DateTime})">
+            <summary>
+            Get product details for the supplied product key and effective start date.
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.ProductsController.GetAllProductStatusesAsync">
+            <summary>
+            Get all available product statuses
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.ProductsController.GetAllProductTypesAsync">
+            <summary>
+            Get all available product types
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.ProductsController.AddProductAsync(ordermanagement.shared.product_authority_api.Application.Commands.Products.AddProductDto)">
+            <summary>
+            Add a new Product
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.ProductsController.UpdateProductAsync(ordermanagement.shared.product_authority_api.Application.Commands.Products.UpdateProductDto)">
+            <summary>
+            Update an existing product
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.RatesController.GetRateBasedOnRateKeyAsync(System.String,System.Nullable{System.DateTime})">
+            <summary>
+            Get all active rate details for the supplied rate key and order start date.
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.RatesController.GetRateBasedOnOfferingKeyAsync(System.String,System.Nullable{System.DateTime})">
+            <summary>
+            Get all active offering rates for the supplied offering key and order start date.
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.RatesController.GetRateBasedOnProductKeyAsync(System.String,System.Nullable{System.DateTime})">
+            <summary>
+            Get all active product rates for the supplied product key and order start date.
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.RatesController.GetAllDeliveryMethodsAsync">
+            <summary>
+            Get all available delivery methods
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.RatesController.GetAllRateTypesAsync">
+            <summary>
+            Get all available rate types
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.RatesController.AddRateAsync(System.String,System.String,ordermanagement.shared.product_authority_api.Application.Commands.Rates.AddRateDto)">
+            <summary>
+            Add a rate to the product offering
+            </summary>
+        </member>
+        <member name="M:ordermanagement.shared.product_authority_api.Controllers.RatesController.UpdateRateAsync(System.String,System.String,System.String,ordermanagement.shared.product_authority_api.Application.Commands.Rates.UpdateRateDto)">
+            <summary>
+            Update an existing Rate
             </summary>
         </member>
         <member name="M:ordermanagement.shared.product_authority_api.SwaggerDefaultValues.Apply(Swashbuckle.AspNetCore.Swagger.Operation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">

@@ -33,21 +33,9 @@ namespace ordermanagement.shared.product_authority_api.Application.Queries.Offer
                 {
                     OfferingKey = o.OfferingKey,
                     OfferingEdition = o.OfferingEdition,
-                    OfferingStatus = new OfferingStatusDto
-                    {
-                        OfferingStatusCode = o.OfferingStatus.OfferingStatusCode,
-                        OfferingStatusName = o.OfferingStatus.OfferingStatusName
-                    },
-                    OfferingFormat = new OfferingFormatDto
-                    {
-                        OfferingFormatCode = o.OfferingFormat.OfferingFormatCode,
-                        OfferingFormatName = o.OfferingFormat.OfferingFormatName
-                    },
-                    OfferingPlatform = new OfferingPlatformDto
-                    {
-                        OfferingPlatformCode = o.OfferingPlatform.OfferingPlatformCode,
-                        OfferingPlatformName = o.OfferingPlatform.OfferingPlatformName
-                    }
+                    OfferingStatus = o.OfferingStatus.ToOfferingStatusDto(),
+                    OfferingFormat = o.OfferingFormat.ToOfferingFormatDto(),
+                    OfferingPlatform = o.OfferingPlatform.ToOfferingPlatformDto()
                 })
                 .ToListAsync();
 

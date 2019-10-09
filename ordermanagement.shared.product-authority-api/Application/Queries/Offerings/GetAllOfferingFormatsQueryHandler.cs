@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using ordermanagement.shared.product_authority_api.Application.Models;
+using ordermanagement.shared.product_authority_api.Application.Extensions;
 using ordermanagement.shared.product_authority_api.Application.Queries.Offerings;
 using ordermanagement.shared.product_authority_infrastructure;
 using System.Linq;
@@ -22,11 +22,7 @@ namespace ordermanagement.shared.product_authority_api.Application.Queries.Produ
         {
             var offeringFormats = await _context.OfferingFormats
                 .AsNoTracking()
-                .Select(o => new OfferingFormatDto
-                {
-                    OfferingFormatCode = o.OfferingFormatCode,
-                    OfferingFormatName = o.OfferingFormatName
-                })
+                .Select(o => o.ToOfferingFormatDto())
                 .ToListAsync();
 
             return new GetAllOfferingFormatsQueryDto { OfferingFormats = offeringFormats };

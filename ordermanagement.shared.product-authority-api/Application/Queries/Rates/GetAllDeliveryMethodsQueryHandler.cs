@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using ordermanagement.shared.product_authority_api.Application.Models;
+using ordermanagement.shared.product_authority_api.Application.Extensions;
 using ordermanagement.shared.product_authority_infrastructure;
 using System.Linq;
 using System.Threading;
@@ -21,11 +21,7 @@ namespace ordermanagement.shared.product_authority_api.Application.Queries.Rates
         {
             var deliveryMethods = await _context.DeliveryMethods
                 .AsNoTracking()
-                .Select(r => new DeliveryMethodDto
-                {
-                    DeliveryMethodCode = r.DeliveryMethodCode,
-                    DeliveryMethodName = r.DeliveryMethodName
-                })
+                .Select(r => r.ToDeliveryMethodDto())
                 .ToListAsync();
 
             return new GetAllDeliveryMethodsQueryDto { DeliveryMethods = deliveryMethods };

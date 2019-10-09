@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using ordermanagement.shared.product_authority_api.Application.Models;
+using ordermanagement.shared.product_authority_api.Application.Extensions;
 using ordermanagement.shared.product_authority_api.Application.Queries.Offerings;
 using ordermanagement.shared.product_authority_infrastructure;
 using System.Linq;
@@ -22,11 +22,7 @@ namespace ordermanagement.shared.product_authority_api.Application.Queries.Produ
         {
             var offeringPlatforms = await _context.OfferingPlatforms
                 .AsNoTracking()
-                .Select(o => new OfferingPlatformDto
-                {
-                    OfferingPlatformCode = o.OfferingPlatformCode,
-                    OfferingPlatformName = o.OfferingPlatformName
-                })
+                .Select(o => o.ToOfferingPlatformDto())
                 .ToListAsync();
 
             return new GetAllOfferingPlatformsQueryDto { OfferingPlatforms = offeringPlatforms };
