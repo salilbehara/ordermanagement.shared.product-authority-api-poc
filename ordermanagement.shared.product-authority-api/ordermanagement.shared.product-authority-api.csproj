@@ -24,6 +24,7 @@
     <PackageReference Include="EBSCO.NETCore.WebApi" Version="2.0.0" />
     <PackageReference Include="EBSCO.NETStandard.FeatureFlags" Version="3.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.5.0" />
+    <PackageReference Include="JWT" Version="5.3.1" />
     <PackageReference Include="MediatR" Version="7.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="2.2.0" />
@@ -31,6 +32,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Okta.AspNetCore" Version="1.3.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Serilog.Formatting.Elasticsearch" Version="7.1.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />

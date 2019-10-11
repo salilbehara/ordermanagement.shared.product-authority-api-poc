@@ -2,9 +2,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Okta.AspNetCore;
 using ordermanagement.shared.product_authority_api.Application.Commands.Products;
 using ordermanagement.shared.product_authority_api.Application.Queries.Products;
 using Swashbuckle.AspNetCore.Annotations;
@@ -14,6 +16,8 @@ namespace ordermanagement.shared.product_authority_api.Controllers
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = OktaDefaults.ApiAuthenticationScheme)]
+
     public class ProductsController : ControllerBase
     {
         private readonly IMediator _mediator;
