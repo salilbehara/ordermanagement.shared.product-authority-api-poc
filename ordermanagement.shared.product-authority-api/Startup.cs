@@ -1,4 +1,5 @@
-﻿using FluentValidation.AspNetCore;
+﻿using FluentMigrator.Runner;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ordermanagement.shared.product_authority_api.Extensions;
+using ordermanagement.shared.product_authority_database;
 using ordermanagement.shared.product_authority_infrastructure;
 using Serilog;
 using System.Reflection;
@@ -59,10 +61,20 @@ namespace ordermanagement.shared.product_authority_api
             services.AddSwaggerConfiguration();
             services.AddHealthCheckConfiguration(Configuration);
 
+            // Add common FluentMigrator services
+            services.AddFluentMigratorCore()
+                .ConfigureRunner(rb => rb
+                    // Add SQLite support to FluentMigrator
+                    .AddPostgres()
+                    // Set the connection string
+                    .WithGlobalConnectionString(Configuration["ConnectionStrings:ProductDatabase"])
+                    //.WithGlobalConnectionString("Server=ordermanagement-shared-product-db-lz.cluster-cww2jj360xkz.us-east-1.rds.amazonaws.com; Port=3306; Database=product; User Id=master; Password=uaFYR5L89a;")
+                    // Define the assembly containing the migrations
+                    .ScanIn(typeof(MigrationSequence).Assembly).For.Migrations());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider, IMigrationRunner migrationRunner )
         {
             if (env.IsDevelopment() || env.IsEnvironment("Local"))
             {
@@ -79,6 +91,9 @@ namespace ordermanagement.shared.product_authority_api
                 .UseHealthChecksMiddleware()
                 .UseSwaggerMiddleware(provider)
                 .UseMvc();
+
+            // Execute the migrations
+            migrationRunner.MigrateUp();
         }
     }
 }
