@@ -607,6 +607,18 @@ namespace ordermanagement.shared.product_authority_infrastructure
                     .HasForeignKey(d => d.RateTypeCode)
                     .HasConstraintName("fk_rates_rate_type_codes");
             });
+
+            modelBuilder.Entity<SpidEntity>(entity =>
+            {
+                entity.HasKey(e => e.Spid)
+                    .HasName("pk_spid");
+
+                entity.ToTable("spids", "lookup");
+
+                entity.Property(e => e.Spid)
+                    .HasColumnName("spid")
+                    .HasMaxLength(50);
+            });
         }
     }
 }

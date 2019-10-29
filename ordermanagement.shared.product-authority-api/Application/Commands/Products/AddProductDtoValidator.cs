@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using ordermanagement.shared.product_authority_api.Validators;
 
 namespace ordermanagement.shared.product_authority_api.Application.Commands.Products
 {
@@ -13,7 +14,7 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
             RuleFor(p => p.ProductName).NotEmpty().MaximumLength(128);
             RuleFor(p => p.ProductDisplayName).MaximumLength(128);
             RuleFor(p => p.PublisherId).NotEmpty();
-            RuleFor(p => p.PrintIssn).MaximumLength(8);
+            RuleFor(p => p.PrintIssn).IsValidIssn();
             RuleFor(p => p.OnlineIssn).MaximumLength(8);
             RuleFor(p => p.ProductTypeCode).MaximumLength(4);
             RuleFor(p => p.ProductStatusCode).MaximumLength(4);
