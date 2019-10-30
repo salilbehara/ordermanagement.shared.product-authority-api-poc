@@ -43,7 +43,7 @@ namespace ordermanagement.shared.product_authority_api.test.Validators
 
             var context = new ProductAuthorityDatabaseContext(options, _mediatorMock.Object);
 
-            context.Products.AddRange(new[] { _product });
+            context.Products.Add(_product);
 
             context.SaveChanges();
             return context;

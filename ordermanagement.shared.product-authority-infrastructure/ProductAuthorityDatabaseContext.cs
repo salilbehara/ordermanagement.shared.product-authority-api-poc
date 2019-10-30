@@ -28,6 +28,7 @@ namespace ordermanagement.shared.product_authority_infrastructure
         public virtual DbSet<RateClassificationEntity> RateClassifications { get; set; }
         public virtual DbSet<RateTypeEntity> RateTypes { get; set; }
         public virtual DbSet<RateEntity> Rates { get; set; }
+        public virtual DbSet<SpidEntity> Spids { get; set; }
 
         public async Task<bool> SaveChangesAndPublishEventsAsync(IReadOnlyCollection<INotification> domainEvents, CancellationToken cancellationToken = default)
         {
@@ -616,8 +617,7 @@ namespace ordermanagement.shared.product_authority_infrastructure
                 entity.ToTable("spids", "lookup");
 
                 entity.Property(e => e.Spid)
-                    .HasColumnName("spid")
-                    .HasMaxLength(50);
+                    .HasColumnName("spid");
             });
         }
     }

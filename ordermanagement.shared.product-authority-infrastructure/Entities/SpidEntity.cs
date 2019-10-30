@@ -6,6 +6,6 @@ namespace ordermanagement.shared.product_authority_infrastructure.Entities
 {
     public class SpidEntity
     {
-        public string Spid { get; set; }
+        public int Spid { get; set; }
     }
 }

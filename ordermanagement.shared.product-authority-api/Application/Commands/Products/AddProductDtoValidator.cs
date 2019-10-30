@@ -22,10 +22,12 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
             RuleFor(p => p.OnlineIssn).NotEqual(p => p.PrintIssn)
                                       .WithMessage("Print and Online ISSN must be different.")
                                       .IsValidIssn()
-                                     .DependentRules(() => RuleFor(p => p.OnlineIssn).IsUniqueIssn(context));
+                                      .DependentRules(() => RuleFor(p => p.OnlineIssn).IsUniqueIssn(context));
             RuleFor(p => p.ProductTypeCode).MaximumLength(4);
             RuleFor(p => p.ProductStatusCode).MaximumLength(4);
             RuleFor(p => p.PublisherProductCode).MaximumLength(32);
+            RuleFor(p => p.LegacyIdSpid).IsSpidFormatValid()
+                                        .DependentRules(() => RuleFor(p => p.LegacyIdSpid).DoesSpidExist(context));
         }
     }
 }

@@ -34,6 +34,8 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
             RuleFor(p => p.ProductTypeCode).MaximumLength(4);
             RuleFor(p => p.ProductStatusCode).MaximumLength(4);
             RuleFor(p => p.PublisherProductCode).MaximumLength(32);
+            RuleFor(p => p.LegacyIdSpid).IsSpidFormatValid()
+                                        .DependentRules(() => RuleFor(p => p.LegacyIdSpid).DoesSpidExist(context));
 
             RuleFor(p => p.EffectiveStartDate).Must(IsProductValidForDateRangeAsync)
                 .WithMessage($"No product found for the specified 'Product Key' and 'Effective Start date'.");
