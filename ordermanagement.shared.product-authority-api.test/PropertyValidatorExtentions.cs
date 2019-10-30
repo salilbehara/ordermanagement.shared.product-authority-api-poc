@@ -24,6 +24,6 @@ namespace ordermanagement.shared.product_authority_api.test
             !GetValidationFailures<T, T>(validator, value, v => v, fieldName).Any();
 
         public static bool IsValid<T, TProperty>(this PropertyValidator validator, T value, Expression<Func<T, TProperty>> propertyExpression, string fieldName = "test field") =>
-          !GetValidationFailures(validator, value, propertyExpression, fieldName).Any();
+            !GetValidationFailures(validator, value, propertyExpression, fieldName).Any();
     }
 }

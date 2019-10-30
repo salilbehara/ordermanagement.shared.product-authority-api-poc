@@ -30,6 +30,8 @@ namespace ordermanagement.shared.product_authority_api.test.Validators
 
             context.Spids.Add(new SpidEntity { Spid = 12345 });
 
+            context.Products.Add(Any.ProductEntity("key", new DateTime(2019, 02, 01)));
+
             context.SaveChanges();
             return context;
         }
