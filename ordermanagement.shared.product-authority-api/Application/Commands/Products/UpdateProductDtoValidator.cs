@@ -23,8 +23,14 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
             RuleFor(p => p.EffectiveStartDate).NotEmpty();
             RuleFor(p => p.ProductName).NotEmpty().MaximumLength(128);
             RuleFor(p => p.ProductDisplayName).MaximumLength(128);
-            RuleFor(p => p.PrintIssn).IsValidIssn().IsUniquePrintIssn(context);
-            RuleFor(p => p.OnlineIssn).IsValidIssn().IsUniqueOnlineIssn(context);
+            RuleFor(p => p.PrintIssn).NotEqual(p => p.OnlineIssn)
+                                     .WithMessage("Print and Online ISSN must be different.")
+                                     .IsValidIssn()
+                                     .DependentRules(() => RuleFor(p => p.PrintIssn).IsUniqueIssn(context));
+            RuleFor(p => p.OnlineIssn).NotEqual(p => p.PrintIssn)
+                                      .WithMessage("Print and Online ISSN must be different.")
+                                      .IsValidIssn()
+                                      .DependentRules(() => RuleFor(p => p.OnlineIssn).IsUniqueIssn(context));
             RuleFor(p => p.ProductTypeCode).MaximumLength(4);
             RuleFor(p => p.ProductStatusCode).MaximumLength(4);
             RuleFor(p => p.PublisherProductCode).MaximumLength(32);

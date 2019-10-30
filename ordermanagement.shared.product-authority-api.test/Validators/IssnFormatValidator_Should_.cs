@@ -6,14 +6,11 @@ namespace ordermanagement.shared.product_authority_api.test.Validators
     public class IssnFormatValidator_Should_
     {
         [Theory,
-         InlineData("0000-0000", true),
          InlineData("00000000", true),
-         InlineData("1000-002X", true),
          InlineData("1000002X", true),
-         InlineData("1000-0011", true),
          InlineData("10000011", true),
-         InlineData("0000-0001", false),
-         InlineData("1000-0020", false),
+         InlineData("00000001", false),
+         InlineData("10000020", false),
          InlineData("abcd-efgh", false),
          InlineData("", false),
          InlineData(null, false),

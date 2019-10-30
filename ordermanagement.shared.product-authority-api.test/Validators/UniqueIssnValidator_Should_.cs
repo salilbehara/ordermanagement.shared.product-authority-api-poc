@@ -52,7 +52,7 @@ namespace ordermanagement.shared.product_authority_api.test.Validators
         [Fact]
         public void Be_Valid_If_Product_Already_Has_Same_Print_Issn()
         {
-            var validator = new UniqueIssnValidator(_dbContext, UniqueIssnCheckType.Print);
+            var validator = new UniqueIssnValidator(_dbContext);
             var testModel = new TestModelWithKey
             {
                 ProductKey = _product.ProductKey,
@@ -65,7 +65,7 @@ namespace ordermanagement.shared.product_authority_api.test.Validators
         [Fact]
         public void Be_Invalid_If_Different_Product_Already_Has_Same_Print_Issn()
         {
-            var validator = new UniqueIssnValidator(_dbContext, UniqueIssnCheckType.Print);
+            var validator = new UniqueIssnValidator(_dbContext);
             var testModel = new TestModelWithKey
             {
                 ProductKey = "i'm different!",
@@ -78,7 +78,7 @@ namespace ordermanagement.shared.product_authority_api.test.Validators
         [Fact]
         public void Be_Invalid_If_Any_Product_Already_Has_Same_Print_Issn()
         {
-            var validator = new UniqueIssnValidator(_dbContext, UniqueIssnCheckType.Print);
+            var validator = new UniqueIssnValidator(_dbContext);
             var testModel = new TestModelWithoutKey
             {
                 Issn = _product.PrintIssn
@@ -90,7 +90,7 @@ namespace ordermanagement.shared.product_authority_api.test.Validators
         [Fact]
         public void Be_Valid_If_No_Product_Has_Print_Issn_With_Key()
         {
-            var validator = new UniqueIssnValidator(_dbContext, UniqueIssnCheckType.Print);
+            var validator = new UniqueIssnValidator(_dbContext);
             var testModel = new TestModelWithKey
             {
                 ProductKey = "i'm different!",
@@ -103,7 +103,7 @@ namespace ordermanagement.shared.product_authority_api.test.Validators
         [Fact]
         public void Be_Valid_If_No_Product_Has_Print_Issn_Without_Key()
         {
-            var validator = new UniqueIssnValidator(_dbContext, UniqueIssnCheckType.Print);
+            var validator = new UniqueIssnValidator(_dbContext);
             var testModel = new TestModelWithoutKey
             {
                 Issn = _product.PrintIssn + "X"
@@ -115,7 +115,7 @@ namespace ordermanagement.shared.product_authority_api.test.Validators
         [Fact]
         public void Be_Valid_If_Product_Already_Has_Same_Online_Issn()
         {
-            var validator = new UniqueIssnValidator(_dbContext, UniqueIssnCheckType.Online);
+            var validator = new UniqueIssnValidator(_dbContext);
             var testModel = new TestModelWithKey
             {
                 ProductKey = _product.ProductKey,
@@ -128,7 +128,7 @@ namespace ordermanagement.shared.product_authority_api.test.Validators
         [Fact]
         public void Be_Invalid_If_Different_Product_Already_Has_Same_Online_Issn()
         {
-            var validator = new UniqueIssnValidator(_dbContext, UniqueIssnCheckType.Online);
+            var validator = new UniqueIssnValidator(_dbContext);
             var testModel = new TestModelWithKey
             {
                 ProductKey = "i'm different!",
@@ -136,55 +136,6 @@ namespace ordermanagement.shared.product_authority_api.test.Validators
             };
 
             Assert.False(validator.IsValid(testModel, m => m.Issn));
-        }
-
-        [Fact]
-        public void Be_Invalid_If_Any_Product_Already_Has_Same_Online_Issn()
-        {
-            var validator = new UniqueIssnValidator(_dbContext, UniqueIssnCheckType.Online);
-            var testModel = new TestModelWithoutKey
-            {
-                Issn = _product.OnlineIssn
-            };
-
-            Assert.False(validator.IsValid(testModel, m => m.Issn));
-        }
-
-        [Fact]
-        public void Be_Valid_If_No_Product_Has_Online_Issn_With_Key()
-        {
-            var validator = new UniqueIssnValidator(_dbContext, UniqueIssnCheckType.Online);
-            var testModel = new TestModelWithKey
-            {
-                ProductKey = "i'm different!",
-                Issn = _product.OnlineIssn + "X"
-            };
-
-            Assert.True(validator.IsValid(testModel, m => m.Issn));
-        }
-
-        [Fact]
-        public void Be_Valid_If_No_Product_Has_Online_Issn_Without_Key()
-        {
-            var validator = new UniqueIssnValidator(_dbContext, UniqueIssnCheckType.Online);
-            var testModel = new TestModelWithoutKey
-            {
-                Issn = _product.OnlineIssn + "X"
-            };
-
-            Assert.True(validator.IsValid(testModel, m => m.Issn));
-        }
-
-        [Fact]
-        public void Throw_Due_To_Invalid_Check_Type()
-        {
-            var validator = new UniqueIssnValidator(_dbContext, (UniqueIssnCheckType)99999);
-            var testModel = new TestModelWithoutKey
-            {
-                Issn = _product.OnlineIssn
-            };
-
-            Assert.Throws<ArgumentException>(() => validator.IsValid(testModel, m => m.Issn));
         }
     }
 }

@@ -1,15 +1,11 @@
 ﻿using FluentValidation.Validators;
+using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace ordermanagement.shared.product_authority_api.Validators
 {
     public class IssnFormatValidator : PropertyValidator
     {
-        //The format is NNNN-NNNC where N is an integer 0-9 and C is a check digit which may be 0-9 or X.
-        //Validation doc states C must be an upper case X, so that is all the regex allows.
-        private static readonly Regex _issnRegex = new Regex(@"^(\d{4})-?(\d{3})([\dX])$", RegexOptions.Compiled);
-
         public IssnFormatValidator() : base("{ValidationMessage}")
         {
 
@@ -28,24 +24,29 @@ namespace ordermanagement.shared.product_authority_api.Validators
         private static void SetValidationMessage(PropertyValidatorContext context, string message) =>
             context.MessageFormatter.AppendArgument("ValidationMessage", message);
 
+        private static bool AreFirstSevenCharactersValid(string issn) =>
+            issn.Take(7)
+                .All(c => Char.IsNumber(c));
+
+        private static bool IsCheckCharacterValid(string issn) =>
+            Char.IsNumber(issn.Last()) || (issn.Last() == 'X');
+
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            var match = _issnRegex.Match(context.PropertyValue as string ?? "");
+            var issn = context.PropertyValue as string;
+            var isValidFormat = !String.IsNullOrEmpty(issn)
+                                    && (issn.Length == 8)
+                                    && AreFirstSevenCharactersValid(issn)
+                                    && IsCheckCharacterValid(issn);
 
-            if (!match.Success)
+            if (!isValidFormat)
             {
                 SetValidationMessage(context, "{PropertyName} has an invalid format.");
 
                 return false;
             }
 
-            /*
-             * Match group 1: First four characters
-             * Match group 2: Next three characters
-             * Match group 3: Check character
-             */
-
-            var firstSevenCharacters = match.Groups[1].Value + match.Groups[2].Value;
+            var firstSevenCharacters = issn.Substring(0, 7);
             var weightedSum = GenerateWeightedSum(firstSevenCharacters);
             var remainder = (weightedSum % 11);
             char checkCharacter;
@@ -62,7 +63,7 @@ namespace ordermanagement.shared.product_authority_api.Validators
 
             //Match group value is a string. Regex limts to one character, so we can safely
             //take the first character for a direct character-to-character comparison
-            if(checkCharacter != match.Groups[3].Value[0])
+            if(checkCharacter != issn[7])
             {
                 SetValidationMessage(context, "{PropertyName} has an invalid check digit.");
 
