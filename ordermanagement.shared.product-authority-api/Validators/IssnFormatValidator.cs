@@ -1,14 +1,19 @@
-﻿using FluentValidation;
+﻿using FluentValidation.Validators;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace ordermanagement.shared.product_authority_api.Validators
 {
-    public static class IssnValidator
+    public class IssnFormatValidator : PropertyValidator
     {
         //The format is NNNN-NNNC where N is an integer 0-9 and C is a check digit which may be 0-9 or X.
         //Validation doc states C must be an upper case X, so that is all the regex allows.
         private static readonly Regex _issnRegex = new Regex(@"^(\d{4})-?(\d{3})([\dX])$", RegexOptions.Compiled);
+
+        public IssnFormatValidator() : base("{ValidationMessage}")
+        {
+
+        }
 
         private static int CharToInt(char character) =>
             character - '0';
@@ -20,12 +25,17 @@ namespace ordermanagement.shared.product_authority_api.Validators
             firstSevenCharacters.Select((c, i) => CharToInt(c) * (8 - i))
                                 .Sum();
 
-        private static bool IsIssnValid<T>(T model, string value)
+        private static void SetValidationMessage(PropertyValidatorContext context, string message) =>
+            context.MessageFormatter.AppendArgument("ValidationMessage", message);
+
+        protected override bool IsValid(PropertyValidatorContext context)
         {
-            var match = _issnRegex.Match(value as string);
+            var match = _issnRegex.Match(context.PropertyValue as string ?? "");
 
             if (!match.Success)
             {
+                SetValidationMessage(context, "{PropertyName} has an invalid format.");
+
                 return false;
             }
 
@@ -52,13 +62,14 @@ namespace ordermanagement.shared.product_authority_api.Validators
 
             //Match group value is a string. Regex limts to one character, so we can safely
             //take the first character for a direct character-to-character comparison
-            return checkCharacter == match.Groups[3].Value[0];
-        }
+            if(checkCharacter != match.Groups[3].Value[0])
+            {
+                SetValidationMessage(context, "{PropertyName} has an invalid check digit.");
 
-        public static IRuleBuilderOptions<T, string> IsValidIssn<T>(this IRuleBuilder<T, string> ruleBuilder)
-        {
-            return ruleBuilder.Must(IsIssnValid)
-                              .WithMessage("{PropertyName} has invalid format or check character.");
+                return false;
+            }
+
+            return true;
         }
     }
 }

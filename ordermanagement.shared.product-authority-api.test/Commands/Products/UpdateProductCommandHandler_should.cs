@@ -23,10 +23,10 @@ namespace ordermanagement.shared.product_authority_api.test.Commands.Products
 
         public UpdateProductCommandHandler_should()
         {
-            _products = new List<ProductEntity>(new[]
-                        {
-                Any.ProductEntity("key",new DateTime(2019, 02, 01))
-            });
+            _products = new List<ProductEntity>
+            {
+                Any.ProductEntity("key", new DateTime(2019, 02, 01))
+            };
 
             _context = GetContextWithData();
             _handler = new UpdateProductCommandHandler(_context);

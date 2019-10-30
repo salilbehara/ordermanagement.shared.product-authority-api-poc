@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using ordermanagement.shared.product_authority_api.Application.Events;
+using ordermanagement.shared.product_authority_api.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
 

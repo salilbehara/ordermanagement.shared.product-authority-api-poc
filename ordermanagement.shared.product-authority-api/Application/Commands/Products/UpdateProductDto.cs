@@ -1,8 +1,9 @@
-﻿using System;
+﻿using ordermanagement.shared.product_authority_api.Interfaces;
+using System;
 
 namespace ordermanagement.shared.product_authority_api.Application.Commands.Products
 {
-    public class UpdateProductDto
+    public class UpdateProductDto : IProductKey
     {
         public string ProductKey { get; set; }
         public DateTime EffectiveStartDate { get; set; }

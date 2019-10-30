@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using ordermanagement.shared.product_authority_api.Application.Extensions;
+using ordermanagement.shared.product_authority_api.Validators;
 using ordermanagement.shared.product_authority_infrastructure;
 using System;
 using System.Linq;
@@ -22,13 +23,14 @@ namespace ordermanagement.shared.product_authority_api.Application.Commands.Prod
             RuleFor(p => p.EffectiveStartDate).NotEmpty();
             RuleFor(p => p.ProductName).NotEmpty().MaximumLength(128);
             RuleFor(p => p.ProductDisplayName).MaximumLength(128);
-            RuleFor(p => p.PrintIssn).MaximumLength(8);
-            RuleFor(p => p.OnlineIssn).MaximumLength(8);
+            RuleFor(p => p.PrintIssn).IsValidIssn().IsUniquePrintIssn(context);
+            RuleFor(p => p.OnlineIssn).IsValidIssn().IsUniqueOnlineIssn(context);
             RuleFor(p => p.ProductTypeCode).MaximumLength(4);
             RuleFor(p => p.ProductStatusCode).MaximumLength(4);
             RuleFor(p => p.PublisherProductCode).MaximumLength(32);
 
-            RuleFor(p => p.EffectiveStartDate).Must(IsProductValidForDateRangeAsync).WithMessage($"No product found for the specified 'Product Key' and 'Effective Start date'.");
+            RuleFor(p => p.EffectiveStartDate).Must(IsProductValidForDateRangeAsync)
+                .WithMessage($"No product found for the specified 'Product Key' and 'Effective Start date'.");
         }
 
         private bool IsProductValidForDateRangeAsync(UpdateProductDto request, DateTime effectiveStartDate)
